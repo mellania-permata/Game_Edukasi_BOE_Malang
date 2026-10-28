@@ -11,6 +11,7 @@
   --line:#e0e5eb;--accent:#3267c8;--accent-hover:#2553a7;--accent2:#e8effd;
   --good:#23784b;--bad:#b33b35;--tile:#edf1f5;--wall:#475569;
   --shadow:0 4px 14px rgba(22, 38, 59, 0.08);
+  --diff-mudah:#16a34a; --diff-sedang:#d97706; --diff-sulit:#dc2626;
 }
 html[data-theme=dark]{
   color-scheme:dark;
@@ -18,10 +19,11 @@ html[data-theme=dark]{
   --line:#334155;--accent:#38bdf8;--accent-hover:#0284c7;--accent2:#1e3a8a;
   --good:#4ade80;--bad:#f87171;--tile:#1e293b;--wall:#64748b;
   --shadow:0 4px 14px rgba(0, 0, 0, 0.3);
+  --diff-mudah:#4ade80; --diff-sedang:#fbbf24; --diff-sulit:#f87171;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 Inter,system-ui,-apple-system,sans-serif}
-button,textarea{font:inherit}button{cursor:pointer}
+button,textarea,input{font:inherit}button{cursor:pointer}
 
 /* Cover / Landing Page */
 .cover-screen{
@@ -32,31 +34,36 @@ button,textarea{font:inherit}button{cursor:pointer}
 .cover-card{
   background:var(--panel);border:1px solid var(--line);border-radius:24px;
   padding:40px;max-width:760px;width:100%;box-shadow:var(--shadow);
-  display:flex;flex-direction:column;align-items:center;gap:20px;
+  display:flex;flex-direction:column;align-items:center;gap:15px;
   animation:fadeIn 0.6s ease-out;
 }
-.cover-hero-svg{width:160px;height:160px;filter:drop-shadow(0 10px 15px rgba(0,0,0,0.15));animation:float 3s ease-in-out infinite}
+.cover-hero-svg{width:140px;height:140px;filter:drop-shadow(0 10px 15px rgba(0,0,0,0.15));animation:float 3s ease-in-out infinite}
 .cover-title{font-size:36px;font-weight:800;letter-spacing:-1px;margin:0}
 .cover-subtitle{font-size:16px;color:var(--muted);max-width:520px;margin:0}
-.cover-features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;width:100%;margin:10px 0 20px}
+.cover-features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;width:100%;margin:10px 0}
 .feat-box{background:var(--panel2);border:1px solid var(--line);padding:15px;border-radius:12px;text-align:left}
 .feat-box h4{margin:0 0 4px 0;font-size:14px;color:var(--text)}
 .feat-box p{margin:0;font-size:12px;color:var(--muted)}
+.player-input-wrap{display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px;margin-top:10px}
+.player-input{padding:12px;border:2px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);font-weight:600;text-align:center;outline:none;transition:border .2s}
+.player-input:focus{border-color:var(--accent)}
 .btn-start{
   background:var(--accent);color:#fff;font-size:18px;font-weight:700;
-  padding:14px 40px;border:none;border-radius:12px;
+  padding:14px;border:none;border-radius:12px;width:100%;
   box-shadow:0 4px 15px rgba(50,103,200,0.4);transition:all .2s ease;
 }
 .btn-start:hover{transform:translateY(-2px);background:var(--accent-hover)}
+.btn-lb{background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:10px;border-radius:10px;font-weight:600;width:100%;transition:all .2s ease}
+.btn-lb:hover{background:var(--line)}
 
 /* Main App Screen */
 .app{max-width:1440px;margin:auto;padding:22px;display:none}
-header{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}
+header{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px;flex-wrap:wrap}
 .brand{display:flex;gap:12px;align-items:center}
 .logo-svg{width:44px;height:44px}
 h1{font-size:20px;letter-spacing:-.45px;margin:0}
 .subtitle{font-size:12px;color:var(--muted);margin-top:2px}
-.top-actions{display:flex;gap:8px;align-items:center}
+.top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:8px 12px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:all 0.15s ease}
 .btn:hover{border-color:var(--accent);color:var(--accent)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:white}
@@ -68,7 +75,11 @@ h1{font-size:20px;letter-spacing:-.45px;margin:0}
 .panel-head{padding:13px 15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}
 .panel-head h2{font-size:14px;margin:0}
 .panel-body{padding:15px}
-.tag{border:1px solid var(--line);border-radius:6px;padding:3px 6px;color:var(--muted);font-size:10px;white-space:nowrap}
+.tag{border:1px solid var(--line);border-radius:6px;padding:3px 6px;color:var(--muted);font-size:10px;white-space:nowrap;font-weight:600}
+.tag.mudah{color:var(--diff-mudah);border-color:var(--diff-mudah)}
+.tag.sedang{color:var(--diff-sedang);border-color:var(--diff-sedang)}
+.tag.sulit{color:var(--diff-sulit);border-color:var(--diff-sulit)}
+
 .kicker{font-size:10px;letter-spacing:.1em;color:var(--muted);font-weight:750;text-transform:uppercase}
 .mission-title{font-size:18px;line-height:1.25;margin:6px 0}
 .muted{color:var(--muted)}
@@ -77,11 +88,11 @@ h1{font-size:20px;letter-spacing:-.45px;margin:0}
 .objective{padding:11px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;margin:13px 0}
 .objective strong{display:block;margin-bottom:4px}
 .objective ul{padding-left:18px;margin:0;color:var(--muted)}
-.level-list{display:grid;gap:6px;margin-top:9px}
+.level-list{display:grid;gap:6px;margin-top:9px;max-height:400px;overflow-y:auto;padding-right:5px}
 .level-btn{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;width:100%;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);padding:9px;transition:all .15s}
 .level-btn.active{border-color:var(--accent);background:var(--accent2)}
 .level-btn strong{font-size:12px}
-.level-btn small{display:block;color:var(--muted);font-size:11px}
+.level-btn small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
 
 /* Board Game Grid */
 .board-wrap{padding:15px}
@@ -120,7 +131,7 @@ h1{font-size:20px;letter-spacing:-.45px;margin:0}
 
 .editor-head{display:flex;justify-content:space-between;align-items:center;margin:12px 0 7px}
 .editor-head strong{font-size:12px}
-.code-list{display:grid;gap:6px}
+.code-list{display:grid;gap:6px;max-height:220px;overflow-y:auto;padding-right:5px}
 .command-row{display:flex;gap:5px;align-items:center}
 .line-no{width:18px;color:var(--muted);font-size:11px}
 .command{flex:1;min-width:0;border:1px solid var(--line);border-radius:6px;padding:7px 8px;background:var(--panel2);font:12px ui-monospace,monospace;overflow-wrap:anywhere}
@@ -143,11 +154,10 @@ textarea:focus{border-color:var(--accent)}
 .feedback strong{display:block;color:var(--text);margin-bottom:4px}
 .footer{text-align:center;font-size:11px;color:var(--muted);margin-top:20px}
 
-/* Success Modal Alert */
+/* Modals */
 .modal-overlay{
   position:fixed;top:0;left:0;right:0;bottom:0;
-  background:rgba(15, 23, 42, 0.7);
-  backdrop-filter:blur(4px);
+  background:rgba(15, 23, 42, 0.7);backdrop-filter:blur(4px);
   display:none;align-items:center;justify-content:center;
   z-index:999;padding:20px;
 }
@@ -157,13 +167,22 @@ textarea:focus{border-color:var(--accent)}
   border-radius:20px;padding:30px;max-width:440px;width:100%;
   text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.3);
   display:flex;flex-direction:column;align-items:center;gap:15px;
+  max-height:90vh;overflow-y:auto;
 }
-.modal-icon{width:90px;height:90px;animation:float 3s ease-in-out infinite}
+.modal-icon{width:80px;height:80px;animation:float 3s ease-in-out infinite}
 .modal-title{font-size:24px;font-weight:800;margin:0;color:var(--text)}
 .modal-stars{font-size:32px;color:#f59e0b;margin:-5px 0}
 .modal-desc{font-size:14px;color:var(--muted);margin:0}
 .modal-actions{display:flex;gap:10px;width:100%;margin-top:10px}
 .modal-actions .btn{flex:1;justify-content:center;padding:12px;font-size:14px}
+
+/* Leaderboard List */
+.lb-list{width:100%;display:flex;flex-direction:column;gap:8px;margin:10px 0;text-align:left}
+.lb-item{display:flex;justify-content:space-between;align-items:center;padding:10px 15px;background:var(--panel2);border:1px solid var(--line);border-radius:10px}
+.lb-item.highlight{border-color:var(--accent);background:var(--accent2)}
+.lb-rank{font-weight:800;color:var(--muted);width:25px}
+.lb-name{font-weight:700;flex:1}
+.lb-score{font-weight:800;color:var(--accent)}
 
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 @keyframes fadeIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
@@ -177,7 +196,7 @@ textarea:focus{border-color:var(--accent)}
 <!-- SVG ASSETS DEFINITION -->
 <svg style="display:none;">
   <defs>
-    <!-- Vector Robot Graphic -->
+    <!-- Robot -->
     <g id="svg-robot">
       <ellipse cx="25" cy="45" rx="16" ry="4" fill="rgba(0,0,0,0.2)"/>
       <rect x="8" y="36" width="8" height="10" rx="3" fill="#334155"/>
@@ -190,35 +209,26 @@ textarea:focus{border-color:var(--accent)}
       <rect x="22" y="16" width="6" height="5" fill="#64748b"/>
       <rect x="14" y="6" width="22" height="12" rx="4" fill="url(#botBodyGrad)" stroke="#1e293b" stroke-width="1.5"/>
       <rect x="17" y="8" width="16" height="6" rx="3" fill="#0284c7"/>
-      <circle cx="21" cy="11" r="2" fill="#38bdf8">
-        <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
-      </circle>
-      <circle cx="29" cy="11" r="2" fill="#38bdf8">
-        <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
-      </circle>
+      <circle cx="21" cy="11" r="2" fill="#38bdf8"><animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/></circle>
+      <circle cx="29" cy="11" r="2" fill="#38bdf8"><animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/></circle>
       <line x1="25" y1="6" x2="25" y2="2" stroke="#64748b" stroke-width="2"/>
-      <circle cx="25" cy="1.5" r="2" fill="#ef4444">
-        <animate attributeName="fill" values="#ef4444;#38bdf8;#ef4444" dur="1.5s" repeatCount="indefinite"/>
-      </circle>
+      <circle cx="25" cy="1.5" r="2" fill="#ef4444"><animate attributeName="fill" values="#ef4444;#38bdf8;#ef4444" dur="1.5s" repeatCount="indefinite"/></circle>
     </g>
-
-    <!-- Battery Graphic -->
+    <!-- Battery -->
     <g id="svg-battery">
       <rect x="14" y="10" width="22" height="30" rx="4" fill="#334155" stroke="#f59e0b" stroke-width="2"/>
       <rect x="20" y="6" width="10" height="4" rx="1" fill="#f59e0b"/>
       <rect x="17" y="14" width="16" height="22" rx="2" fill="#fef08a"/>
       <path d="M26 16L20 26H25L24 34L30 24H25L26 16Z" fill="#d97706"/>
     </g>
-
-    <!-- Exit Door Graphic -->
+    <!-- Exit Door -->
     <g id="svg-door">
       <rect x="10" y="6" width="30" height="38" rx="4" fill="#166534" stroke="#4ade80" stroke-width="2"/>
       <rect x="14" y="10" width="22" height="34" rx="2" fill="#22c55e"/>
       <circle cx="31" cy="27" r="2.5" fill="#fef08a"/>
       <path d="M25 12 L33 20 L25 28" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
     </g>
-
-    <!-- Wall Graphic -->
+    <!-- Wall -->
     <g id="svg-wall">
       <rect x="4" y="4" width="42" height="42" rx="6" fill="#475569" stroke="#334155" stroke-width="2"/>
       <line x1="4" y1="18" x2="46" y2="18" stroke="#334155" stroke-width="2"/>
@@ -228,7 +238,6 @@ textarea:focus{border-color:var(--accent)}
       <line x1="35" y1="18" x2="35" y2="32" stroke="#334155" stroke-width="2"/>
       <line x1="25" y1="32" x2="25" y2="46" stroke="#334155" stroke-width="2"/>
     </g>
-
     <linearGradient id="botBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#94a3b8"/>
       <stop offset="100%" stop-color="#475569"/>
@@ -242,25 +251,13 @@ textarea:focus{border-color:var(--accent)}
     <svg class="cover-hero-svg" viewBox="0 0 50 50"><use href="#svg-robot"/></svg>
     <div>
       <h1 class="cover-title">Robot Rescue <span style="color:var(--accent)">Python Lab</span></h1>
-      <p class="cover-subtitle">Kuasai logika pemrograman dan problem solving melalui petualangan menyelamatkan robot!</p>
+      <p class="cover-subtitle">Kuasai logika pemrograman melalui petualangan menyelamatkan robot!</p>
     </div>
-    
-    <div class="cover-features">
-      <div class="feat-box">
-        <h4>🧩 Visual / Kode</h4>
-        <p>Gunakan blok instruksi puzzle atau tulis langsung sintaks Python.</p>
-      </div>
-      <div class="feat-box">
-        <h4>🎵 Audio Interactive</h4>
-        <p>Efek suara synthesizer & latar musik memandu petualanganmu.</p>
-      </div>
-      <div class="feat-box">
-        <h4>📊 Evaluasi Otomatis</h4>
-        <p>Uji ketepatan, efisiensi langkah, dan analisa logika solusi.</p>
-      </div>
+    <div class="player-input-wrap">
+      <input type="text" id="playerNameInput" class="player-input" placeholder="Masukkan Nama Kamu..." maxlength="15" autocomplete="off">
+      <button class="btn-start" id="startBtn">Mulai Petualangan ▶</button>
+      <button class="btn-lb" id="openLbBtn">🏆 Papan Peringkat Global</button>
     </div>
-
-    <button class="btn-start" id="startBtn">Mulai Petualangan ▶</button>
   </div>
 </div>
 
@@ -270,24 +267,25 @@ textarea:focus{border-color:var(--accent)}
  <div class="brand">
    <svg class="logo-svg" viewBox="0 0 50 50"><use href="#svg-robot"/></svg>
    <div>
-     <h1>Robot Rescue <span class="muted" style="font-weight:500">/ Python Lab</span></h1>
-     <div class="subtitle">Belajar logika lewat misi, bukan sekadar hafalan sintaks.</div>
+     <h1>Robot Rescue <span class="muted" style="font-weight:500">/ Lab</span></h1>
+     <div class="subtitle">Pemain: <strong id="displayPlayerName" style="color:var(--accent)">-</strong></div>
    </div>
  </div>
  <div class="top-actions">
    <button class="btn" id="homeBtn">🏠 Halaman Depan</button>
    <button class="btn" id="soundBtn">🔊 Suara: ON</button>
    <button class="btn" id="musicBtn">🎵 Musik: ON</button>
-   <button class="btn" id="themeBtn">☾ Dark Mode</button>
+   <button class="btn" id="themeBtn">☾ Dark</button>
+   <!-- TOMBOL RESET PROGRESS DITAMBAHKAN KEMBALI AGAR JS TIDAK CRASH -->
    <button class="btn" id="resetProgress">Reset Progres</button>
  </div>
 </header>
 
 <main class="layout">
 <section class="panel">
- <div class="panel-head"><h2>Briefing Misi</h2><span class="tag" id="levelCount">MISI 01 / 06</span></div>
+ <div class="panel-head"><h2>Briefing Misi</h2><span class="tag" id="levelCount">MISI 01 / 09</span></div>
  <div class="panel-body">
-   <div class="kicker" id="chapter">DASAR ALGORITMA</div>
+   <div class="kicker" id="chapter">TINGKAT: MUDAH</div>
    <h2 class="mission-title" id="missionTitle">Jalur Pulang</h2>
    <p class="muted" id="missionDesc">Arahkan robot ke pintu keluar.</p>
    <div class="pills" id="pills"></div>
@@ -350,11 +348,11 @@ textarea:focus{border-color:var(--accent)}
 </section>
 
 <section class="panel">
- <div class="panel-head"><h2>Evaluasi Problem Solving</h2><span class="tag" id="gradeTag">BELUM DINILAI</span></div>
+ <div class="panel-head"><h2>Evaluasi & Skor</h2><span class="tag" id="gradeTag">BELUM DINILAI</span></div>
  <div class="panel-body">
   <div class="score-head">
     <div>
-      <div class="kicker">Skor Misi</div>
+      <div class="kicker">Skor Misi Ini</div>
       <div class="score"><span id="score">—</span><span style="font-size:13px;color:var(--muted);letter-spacing:0"> / 100</span></div>
     </div>
     <div class="stars" id="stars">☆☆☆</div>
@@ -386,8 +384,26 @@ textarea:focus{border-color:var(--accent)}
   </div>
 </div>
 
+<!-- LEADERBOARD MODAL -->
+<div class="modal-overlay" id="leaderboardModal">
+  <div class="modal-card">
+    <h2 class="modal-title">🏆 Papan Peringkat Global</h2>
+    <p class="modal-desc">Akumulasi skor tertinggi dari semua misi.</p>
+    <div class="lb-list" id="lbList">
+      <!-- Item leaderboard akan di-render di sini -->
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="closeLbBtn">Tutup Peringkat</button>
+    </div>
+  </div>
+</div>
+
 <script>
-// WEB AUDIO SYNTHESIZER (SOUND ENGINE)
+// Variabel Global Engine
+let simInterval = null;
+let modalTimeout = null;
+
+// WEB AUDIO SYNTHESIZER
 class SoundEngine {
   constructor() {
     this.ctx = null;
@@ -401,11 +417,11 @@ class SoundEngine {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       this.ctx = new AudioCtx();
     }
-    if (this.ctx.state === 'suspended') {
+    if (this.ctx && this.ctx.state === 'suspended') {
       this.ctx.resume();
     }
   }
-  playTone(freq, duration, type='sine', gainVal=0.08) {
+  playTone(freq, duration, type='sine', gainVal=0.15) {
     if (!this.soundOn) return;
     this.init();
     try {
@@ -413,7 +429,8 @@ class SoundEngine {
       const gain = this.ctx.createGain();
       osc.type = type;
       osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-      gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+      gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(gainVal, this.ctx.currentTime + 0.03);
       gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
       osc.connect(gain);
       gain.connect(this.ctx.destination);
@@ -421,62 +438,99 @@ class SoundEngine {
       osc.stop(this.ctx.currentTime + duration);
     } catch(e) {}
   }
-  sfxMove() { this.playTone(320, 0.08, 'triangle', 0.08); }
-  sfxTurn() { this.playTone(480, 0.06, 'sine', 0.06); }
+  sfxMove() { this.playTone(350, 0.1, 'triangle', 0.12); }
+  sfxTurn() { this.playTone(520, 0.08, 'sine', 0.1); }
   sfxBattery() {
-    this.playTone(523, 0.1, 'sine', 0.12);
-    setTimeout(() => this.playTone(659, 0.1, 'sine', 0.12), 80);
-    setTimeout(() => this.playTone(783, 0.15, 'sine', 0.12), 160);
+    this.playTone(523.25, 0.1, 'sine', 0.2);
+    setTimeout(() => this.playTone(659.25, 0.1, 'sine', 0.2), 80);
+    setTimeout(() => this.playTone(783.99, 0.15, 'sine', 0.2), 160);
   }
-  sfxBump() {
-    this.playTone(120, 0.2, 'sawtooth', 0.15);
-  }
+  sfxBump() { this.playTone(110, 0.25, 'sawtooth', 0.2); }
   sfxSuccess() {
-    const notes = [440, 554, 659, 880];
-    notes.forEach((f, i) => {
-      setTimeout(() => this.playTone(f, 0.18, 'sine', 0.12), i * 100);
-    });
+    const notes = [523.25, 659.25, 783.99, 1046.50];
+    notes.forEach((f, i) => { setTimeout(() => this.playTone(f, 0.2, 'triangle', 0.2), i * 110); });
   }
   toggleMusic() {
+    this.init();
     this.musicOn = !this.musicOn;
-    if (this.musicOn) {
-      this.startBGM();
-    } else {
-      this.stopBGM();
-    }
+    if (this.musicOn) this.startBGM(); else this.stopBGM();
     return this.musicOn;
   }
   startBGM() {
     this.init();
-    if (this.bgmTimer) clearInterval(this.bgmTimer);
+    this.stopBGM();
+    this.musicOn = true;
     const melody = [
-      261.63, 329.63, 392.00, 523.25, 
-      349.23, 440.00, 523.25, 659.25,
-      293.66, 349.23, 440.00, 587.33,
-      196.00, 246.94, 293.66, 392.00
+      { f: 261.63, b: 130.81 }, { f: 329.63, b: 130.81 }, { f: 392.00, b: 130.81 }, { f: 523.25, b: 130.81 },
+      { f: 293.66, b: 146.83 }, { f: 349.23, b: 146.83 }, { f: 440.00, b: 146.83 }, { f: 587.33, b: 146.83 },
+      { f: 329.63, b: 164.81 }, { f: 392.00, b: 164.81 }, { f: 493.88, b: 164.81 }, { f: 659.25, b: 164.81 }
     ];
     this.bgmTimer = setInterval(() => {
       if (!this.musicOn) return;
-      const freq = melody[this.noteIndex % melody.length];
-      this.playTone(freq, 0.35, 'sine', 0.025);
+      const note = melody[this.noteIndex % melody.length];
+      this.playTone(note.f, 0.25, 'sine', 0.08);
+      if (this.noteIndex % 2 === 0) this.playTone(note.b, 0.35, 'triangle', 0.06);
       this.noteIndex++;
-    }, 350);
+    }, 280);
   }
   stopBGM() {
-    if (this.bgmTimer) clearInterval(this.bgmTimer);
+    if (this.bgmTimer) { clearInterval(this.bgmTimer); this.bgmTimer = null; }
+  }
+}
+const audio = new SoundEngine();
+
+// SYSTEM PEMAIN & LEADERBOARD
+let currentPlayer = localStorage.getItem('rr-currentPlayer') || '';
+let leaderboardData = JSON.parse(localStorage.getItem('rr-leaderboard')) || {};
+
+function saveScoreToLeaderboard(levelIdx, score) {
+  if (!currentPlayer) return;
+  if (!leaderboardData[currentPlayer]) {
+    leaderboardData[currentPlayer] = { totalScore: 0, levels: {} };
+  }
+  let currentHigh = leaderboardData[currentPlayer].levels[levelIdx] || 0;
+  if (score > currentHigh) {
+    leaderboardData[currentPlayer].levels[levelIdx] = score;
+    let total = 0;
+    for(let k in leaderboardData[currentPlayer].levels) total += leaderboardData[currentPlayer].levels[k];
+    leaderboardData[currentPlayer].totalScore = total;
+    localStorage.setItem('rr-leaderboard', JSON.stringify(leaderboardData));
   }
 }
 
-const audio = new SoundEngine();
+function renderLeaderboard() {
+  let arr = [];
+  for(let p in leaderboardData) {
+    arr.push({ name: p, score: leaderboardData[p].totalScore });
+  }
+  arr.sort((a,b) => b.score - a.score);
+  
+  const list = $("lbList");
+  list.innerHTML = "";
+  if(arr.length === 0) {
+    list.innerHTML = "<div style='text-align:center;color:var(--muted)'>Belum ada data pemain.</div>";
+    return;
+  }
+  
+  arr.slice(0, 10).forEach((p, idx) => {
+    let div = document.createElement('div');
+    div.className = "lb-item" + (p.name === currentPlayer ? " highlight" : "");
+    div.innerHTML = `<div class="lb-rank">#${idx+1}</div><div class="lb-name">${p.name}</div><div class="lb-score">${p.score} pt</div>`;
+    list.appendChild(div);
+  });
+}
 
-// GAME DATA
+// GAME DATA (9 LEVELS: 3 Mudah, 3 Sedang, 3 Sulit)
 const levels = [
-  {name:"Jalur Pulang",chapter:"DASAR ALGORITMA",desc:"Robot tersesat di fasilitas. Bantu robot mencapai pintu keluar tanpa menabrak tembok.",tags:["Sequencing","Gerakan dasar"],goals:["Capai petak hijau.","Hindari semua tembok."],start:[0,2],dir:"E",battery:null,goal:[3,2],walls:[[2,1],[2,3],[5,0],[5,4]],hint:"Robot menghadap ke kanan. Coba gerakkan robot tiga petak ke kanan.",starter:["move()","move()","move()"],concept:"Urutan instruksi"},
-  {name:"Isi Energi",chapter:"VARIABEL & AKSI",desc:"Ambil baterai sebelum menuju pintu keluar.",tags:["Urutan aksi","State"],goals:["Ambil baterai kuning.","Setelah itu capai pintu keluar."],start:[0,4],dir:"N",battery:[0,2],goal:[3,0],walls:[[1,3],[1,1],[3,2],[5,4]],hint:"Robot menghadap ke atas. Ambil baterai di jalur vertikal, lalu rencanakan jalan menuju pintu.",starter:["move()","move()","collect_battery()","turn_right()","move()","move()","move()","turn_left()","move()","move()"],concept:"Perencanaan"},
-  {name:"Lorong Berulang",chapter:"PENGULANGAN",desc:"Selesaikan lorong panjang, lalu sederhanakan instruksi berulang dengan for.",tags:["for loop","Efisiensi"],goals:["Capai pintu keluar.","Coba gunakan for untuk gerakan berulang."],start:[1,3],dir:"E",battery:null,goal:[5,3],walls:[[3,2],[3,4],[0,1],[6,1]],hint:"Robot perlu bergerak ke kanan empat kali. Dalam mode Python, coba for i in range(4): lalu move() dengan indentasi.",starter:["move()","move()","move()","move()"],concept:"Pengulangan"},
-  {name:"Jalur Aman",chapter:"PENGAMBILAN KEPUTUSAN",desc:"Lorong langsung tertutup tembok. Temukan jalur alternatif.",tags:["Strategi","Debugging logika"],goals:["Jangan menabrak tembok.","Temukan jalan memutar menuju pintu."],start:[1,2],dir:"E",battery:null,goal:[5,2],walls:[[3,2],[3,1],[3,3]],hint:"Jangan maju ke kanan di baris tengah. Cari jalan di sekitar ujung tembok.",starter:["turn_left()","move()","turn_right()","move()","move()","move()","move()","turn_right()","move()"],concept:"Strategi jalur"},
-  {name:"Perbaiki Program",chapter:"DEBUGGING",desc:"Program teknisi gagal. Jalankan satu langkah demi satu langkah untuk menemukan kesalahan.",tags:["Debugging","Uji coba"],goals:["Amati gerak robot.","Perbaiki urutan instruksi sampai tujuan tercapai."],start:[0,1],dir:"E",battery:null,goal:[3,1],walls:[[2,1],[2,2],[5,3]],hint:"Kode awal sengaja belum benar. Perhatikan pesan tabrakan, lalu ubah urutan belokan.",starter:["move()","move()","move()"],concept:"Analisis kesalahan"},
-  {name:"Misi Mandiri",chapter:"TANTANGAN AKHIR",desc:"Rencanakan sendiri jalur robot, ambil baterai, dan capai pintu.",tags:["Problem solving","Adaptasi"],goals:["Ambil baterai.","Capai pintu keluar tanpa menabrak tembok."],start:[0,4],dir:"N",battery:[0,2],goal:[4,0],walls:[[1,3],[2,3],[3,3],[3,1],[1,1]],hint:"Rencanakan perjalanan ke atas menuju baterai, lalu menuju baris atas dan bergerak ke kanan.",starter:["move()","move()","collect_battery()","move()"],concept:"Solusi mandiri"}
+  {difficulty:"Mudah", name:"Jalur Pulang", desc:"Robot tersesat di fasilitas. Bantu robot mencapai pintu keluar tanpa menabrak tembok.", tags:["Gerak Lurus"], goals:["Capai petak hijau."], start:[0,2], dir:"E", battery:null, goal:[3,2], walls:[[2,1],[2,3],[5,0],[5,4]], hint:"Coba gerakkan robot tiga petak ke kanan.", starter:["move()","move()","move()"], concept:"Sequencing Dasar"},
+  {difficulty:"Mudah", name:"Belok Kanan", desc:"Pintu keluar ada di ujung lorong lain. Belok pada waktu yang tepat.", tags:["Belokan"], goals:["Hindari tembok.","Capai pintu keluar."], start:[1,1], dir:"E", battery:null, goal:[4,3], walls:[[1,2],[2,2],[3,2],[4,0],[4,1]], hint:"Maju tiga langkah, lalu belok kanan dan maju lagi.", starter:["move()","move()","move()"], concept:"Navigasi Tikungan"},
+  {difficulty:"Mudah", name:"Isi Energi", desc:"Ambil baterai sebelum menuju pintu keluar.", tags:["Aksi Khusus"], goals:["Ambil baterai.","Capai pintu keluar."], start:[0,4], dir:"N", battery:[0,2], goal:[3,0], walls:[[1,3],[1,1],[3,2],[5,4]], hint:"Ambil baterai di jalur vertikal, lalu rencanakan jalan menuju pintu.", starter:["move()","move()","collect_battery()"], concept:"Variabel State"},
+  {difficulty:"Sedang", name:"Lorong Berulang", desc:"Gunakan pengulangan untuk menyederhanakan instruksi berulang.", tags:["For Loop"], goals:["Gunakan loop for untuk maju."], start:[1,3], dir:"E", battery:null, goal:[5,3], walls:[[3,2],[3,4],[0,1],[6,1]], hint:"Coba gunakan loop for i in range(4): untuk menghemat baris kode.", starter:["move()","move()","move()","move()"], concept:"Efisiensi Looping"},
+  {difficulty:"Sedang", name:"Zig Zag", desc:"Bermanuver melintasi rintangan zigzag untuk sampai di seberang.", tags:["Algoritma","Pola"], goals:["Hindari setiap tembok.","Capai pintu keluar."], start:[0,0], dir:"E", battery:null, goal:[4,4], walls:[[1,0],[1,1],[3,4],[3,3],[3,2]], hint:"Jalur ini membentuk tangga. Belok kanan, maju, lalu belok kiri, maju.", starter:["turn_right()","move()","turn_left()","move()"], concept:"Pengenalan Pola"},
+  {difficulty:"Sedang", name:"Jalur Aman", desc:"Lorong utama tertutup tembok tebal. Temukan jalur memutar.", tags:["Strategi Memutar"], goals:["Jangan menabrak tembok tengah.","Cari jalur aman."], start:[1,2], dir:"E", battery:null, goal:[5,2], walls:[[3,1],[3,2],[3,3]], hint:"Kamu harus naik ke atas atau ke bawah untuk menghindari tiga tembok sejajar.", starter:["turn_left()","move()","turn_right()","move()","move()","move()","move()","turn_right()","move()"], concept:"Problem Solving"},
+  {difficulty:"Sulit", name:"Perbaiki Program", desc:"Program teknisi gagal dan menabrak tembok. Temukan bug-nya.", tags:["Debugging"], goals:["Amati gerakan.","Perbaiki sintaks urutan."], start:[0,1], dir:"E", battery:null, goal:[3,1], walls:[[2,1],[2,2],[5,3]], hint:"Jalankan satu per satu. Saat mau menabrak tembok di (3,2), ubah perintah menjadi belok.", starter:["move()","move()","move()"], concept:"Analisis Kesalahan"},
+  {difficulty:"Sulit", name:"Baterai Tersembunyi", desc:"Baterai berada di lokasi yang sulit dijangkau.", tags:["Perencanaan Panjang"], goals:["Ambil baterai di pojok.","Capai pintu keluar."], start:[3,4], dir:"N", battery:[0,0], goal:[6,0], walls:[[1,4],[1,3],[1,2],[1,1],[3,2],[5,0],[5,1],[5,2]], hint:"Berjalan lurus ke atas tidak mungkin, kamu harus memutar lewat kiri untuk baterai.", starter:["turn_left()","move()"], concept:"Pathfinding"},
+  {difficulty:"Sulit", name:"Misi Mandiri", desc:"Rencanakan seluruh rute secara mandiri melintasi labirin kompleks.", tags:["Mastery"], goals:["Ambil baterai.","Capai pintu."], start:[0,4], dir:"E", battery:[6,4], goal:[6,0], walls:[[2,4],[2,3],[4,2],[4,3],[4,4],[2,1],[6,2]], hint:"Jangan terburu-buru ke pintu, pergi ke arah timur lalu selesaikan lorong untuk baterai.", starter:["move()","move()","turn_left()","move()"], concept:"Solusi Optimal"}
 ];
 
 const rubric = [["Memahami masalah",15],["Perencanaan algoritma",20],["Logika program",25],["Pengujian & debugging",20],["Efisiensi solusi",10],["Adaptasi solusi",10]];
@@ -489,16 +543,18 @@ function level() { return levels[levelIndex]; }
 function theme(t) {
   document.documentElement.dataset.theme = t;
   localStorage.setItem("rr-theme", t);
-  $("themeBtn").textContent = t === "dark" ? '☀ Light Mode' : '☾ Dark Mode';
+  $("themeBtn").textContent = t === "dark" ? '☀ Light' : '☾ Dark';
 }
 
 function showScreen(screen) {
   if (screen === 'cover') {
     $("coverScreen").style.display = 'flex';
     $("appScreen").style.display = 'none';
+    if(currentPlayer) $("playerNameInput").value = currentPlayer;
   } else {
     $("coverScreen").style.display = 'none';
     $("appScreen").style.display = 'block';
+    $("displayPlayerName").textContent = currentPlayer;
   }
 }
 
@@ -507,13 +563,25 @@ function renderLevels() {
   levels.forEach((l, i) => {
     let b = document.createElement("button");
     b.className = "level-btn" + (i === levelIndex ? " active" : "");
-    b.innerHTML = `<span><strong>${String(i+1).padStart(2,"0")} · ${l.name}</strong><small>${l.concept}</small></span><span class="tag">${localStorage.getItem("rr-done-"+i) === "1" ? "✓ Selesai" : "Misi"}</span>`;
+    let diffClass = l.difficulty.toLowerCase();
+    
+    // Tanda Selesai
+    let isDone = localStorage.getItem("rr-done-" + i) === "1";
+    let statusBadge = isDone 
+      ? `<span class="tag" style="color:var(--good);border-color:var(--good)">✓ SELESAI</span>` 
+      : `<span class="tag ${diffClass}">${l.difficulty}</span>`;
+      
+    b.innerHTML = `<span><strong>${String(i+1).padStart(2,"0")} · ${l.name}</strong><small>${l.concept}</small></span>
+                   ${statusBadge}`;
     b.onclick = () => loadLevel(i);
     $("levelList").appendChild(b);
   });
 }
 
 function loadLevel(i) {
+  if (simInterval) { clearInterval(simInterval); simInterval = null; }
+  if (modalTimeout) { clearTimeout(modalTimeout); modalTimeout = null; }
+  
   levelIndex = i;
   let l = level();
   commands = [...l.starter];
@@ -522,7 +590,7 @@ function loadLevel(i) {
   batteryCollected = !l.battery;
   attempts = 0; usedHint = false; usedStep = false; stepState = null; stepCommands = []; stepPos = 0;
 
-  $("chapter").textContent = l.chapter;
+  $("chapter").textContent = "TINGKAT: " + l.difficulty.toUpperCase();
   $("missionTitle").textContent = l.name;
   $("missionDesc").textContent = l.desc;
   $("levelCount").textContent = `MISI ${String(i+1).padStart(2,"0")} / ${levels.length}`;
@@ -536,6 +604,10 @@ function loadLevel(i) {
   $("stars").textContent = "☆☆☆";
   $("gradeTag").textContent = "BELUM DINILAI";
   $("feedback").innerHTML = "<strong>Catatan Pembelajaran</strong>Jalankan program untuk melihat evaluasi dan saran perbaikan.";
+
+  // RESET EDITOR PYTHON KE KONDISI AWAL
+  $("codeEditor").dataset.edited = "";
+  $("codeEditor").value = commands.join("\n");
 
   closeModal();
   renderLevels();
@@ -624,7 +696,7 @@ function renderEditor() {
     $("puzzleEditor").appendChild(list);
   } else {
     $("editorLabel").textContent = "Tulis Kode Python";
-    $("editorHint").textContent = "Fungsi tersedia: move(), turn_left(), turn_right(), collect_battery(). Pengulangan for i in range(n): didukung.";
+    $("editorHint").textContent = "Fungsi: move(), turn_left(), turn_right(), collect_battery(). Pengulangan for i in range(n): didukung.";
     if (!$("codeEditor").dataset.edited) $("codeEditor").value = commands.join("\n");
   }
 }
@@ -702,6 +774,9 @@ function escape(s) { return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "
 
 function runProgram(single = false) {
   audio.init();
+  
+  if (simInterval) { clearInterval(simInterval); simInterval = null; }
+  
   let parsed;
   try {
     parsed = parseProgram();
@@ -748,14 +823,14 @@ function runProgram(single = false) {
     return;
   }
 
-  // Full Animated Run
   let l = level(), s = { x: l.start[0], y: l.start[1], dir: l.dir, battery: !l.battery };
   let log = [], err = null, success = false, n = 0;
-
   stepPos = 0;
-  const interval = setInterval(() => {
+  
+  simInterval = setInterval(() => {
     if (stepPos >= parsed.length) {
-      clearInterval(interval);
+      clearInterval(simInterval);
+      simInterval = null;
       finish(success, err, parsed, s, log);
       return;
     }
@@ -771,7 +846,8 @@ function runProgram(single = false) {
 
     if (err) {
       log.push(`${n}. ${cmd}(): ${err}`);
-      clearInterval(interval);
+      clearInterval(simInterval);
+      simInterval = null;
       finish(false, err, parsed, s, log);
       return;
     }
@@ -779,7 +855,8 @@ function runProgram(single = false) {
 
     if (won(s, l)) {
       success = true;
-      clearInterval(interval);
+      clearInterval(simInterval);
+      simInterval = null;
       finish(true, null, parsed, s, log);
       return;
     }
@@ -788,7 +865,7 @@ function runProgram(single = false) {
 
 function showModal(starsTxt, scoreVal) {
   $("modalStars").textContent = starsTxt;
-  $("modalDesc").textContent = `Selamat! Misi ${levelIndex + 1} berhasil diselesaikan dengan skor ${scoreVal}/100.`;
+  $("modalDesc").textContent = `Selamat! Misi ${levelIndex + 1} (${level().difficulty}) berhasil diselesaikan dengan skor ${scoreVal}/100.`;
   if (levelIndex >= levels.length - 1) {
     $("nextMissionBtn").textContent = "🎉 Semua Misi Selesai!";
   } else {
@@ -799,6 +876,7 @@ function showModal(starsTxt, scoreVal) {
 
 function closeModal() {
   $("successModal").classList.remove("active");
+  $("leaderboardModal").classList.remove("active");
 }
 
 function finish(success, err, parsed, s, log = []) {
@@ -809,7 +887,6 @@ function finish(success, err, parsed, s, log = []) {
 
   if (success) {
     $("console").innerHTML = `<span class="success">✓ Misi berhasil diselesaikan.</span>\n${lines}`;
-    localStorage.setItem("rr-done-" + levelIndex, "1");
   } else {
     $("console").innerHTML = `<span class="error">${err ? "Misi terhenti." : "Misi belum selesai."}</span>\n${lines}`;
   }
@@ -826,11 +903,18 @@ function finish(success, err, parsed, s, log = []) {
 
   renderRubric(sc);
   $("feedback").innerHTML = `<strong>${success ? "Bagus, misi terselesaikan!" : "Langkah Berikutnya"}</strong>${success ? "Solusi berhasil. Coba level berikutnya dan perhatikan efisiensi instruksi." : err ? "Periksa instruksi yang menyebabkan kendala, lalu jalankan kembali." : "Robot belum mencapai tujuan. Gunakan satu langkah untuk memeriksa posisi dan arah."}${usedHint ? " Petunjuk telah digunakan; coba rencanakan misi berikutnya secara mandiri." : ""}`;
+  
+  if (success) {
+    localStorage.setItem("rr-done-" + levelIndex, "1");
+    saveScoreToLeaderboard(levelIndex, total);
+  }
+  
   renderLevels();
   stepState = null;
 
   if (success) {
-    setTimeout(() => showModal(starsTxt, total), 300);
+    if (modalTimeout) clearTimeout(modalTimeout);
+    modalTimeout = setTimeout(() => showModal(starsTxt, total), 300);
   }
 }
 
@@ -843,7 +927,7 @@ function renderRubric(scores) {
   });
 }
 
-// EVENT LISTENERS & INITIALIZATION
+// EVENT LISTENERS
 document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
   if (mode === "puzzle") {
     $("codeEditor").value = commands.join("\n");
@@ -855,26 +939,34 @@ document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
   renderEditor();
 });
 
-const enableAudioOnFirstClick = () => {
+const unlockAudioAndStartBGM = () => {
   audio.init();
-  if (!audio.musicOn) {
-    audio.musicOn = true;
-    audio.startBGM();
-    $("musicBtn").textContent = "🎵 Musik: ON";
-  }
-  document.removeEventListener('click', enableAudioOnFirstClick);
+  if (!audio.musicOn) { audio.startBGM(); $("musicBtn").textContent = "🎵 Musik: ON"; }
+  document.removeEventListener('click', unlockAudioAndStartBGM);
 };
-document.addEventListener('click', enableAudioOnFirstClick);
+document.addEventListener('click', unlockAudioAndStartBGM);
 
 $("startBtn").onclick = () => { 
-  audio.init();
-  if (!audio.musicOn) {
-    audio.musicOn = true;
-    audio.startBGM();
-    $("musicBtn").textContent = "🎵 Musik: ON";
+  let nameInput = $("playerNameInput").value.trim();
+  if (!nameInput) {
+    alert("Silakan masukkan nama kamu sebelum memulai petualangan!");
+    return;
   }
+  currentPlayer = nameInput;
+  localStorage.setItem('rr-currentPlayer', currentPlayer);
+  
+  audio.init();
+  if (!audio.musicOn) { audio.startBGM(); $("musicBtn").textContent = "🎵 Musik: ON"; }
+  
   showScreen('app'); 
+  loadLevel(0);
 };
+
+$("openLbBtn").onclick = () => {
+  renderLeaderboard();
+  $("leaderboardModal").classList.add("active");
+};
+$("closeLbBtn").onclick = () => $("leaderboardModal").classList.remove("active");
 
 $("homeBtn").onclick = () => showScreen('cover');
 
@@ -912,12 +1004,15 @@ $("codeEditor").addEventListener("input", () => $("codeEditor").dataset.edited =
 $("themeBtn").onclick = () => theme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
 
 $("resetProgress").onclick = () => {
-  if (confirm("Reset semua progres level di browser ini?")) {
+  if (confirm("Reset papan peringkat dan progres semua level di browser ini?")) {
+    localStorage.removeItem("rr-leaderboard");
     levels.forEach((_, i) => localStorage.removeItem("rr-done-" + i));
+    leaderboardData = {};
     loadLevel(0);
   }
 };
 
+// Navigasi Modal Kemenangan
 $("modalRetryBtn").onclick = () => loadLevel(levelIndex);
 $("nextMissionBtn").onclick = () => {
   if (levelIndex < levels.length - 1) {
@@ -928,7 +1023,6 @@ $("nextMissionBtn").onclick = () => {
 };
 
 theme(localStorage.getItem("rr-theme") || "light");
-loadLevel(0);
 showScreen('cover');
 </script>
 </body>
