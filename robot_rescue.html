@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Robot Rescue | Python Lab</title>
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f3f5f7;--panel:#ffffff;--panel2:#f8fafc;--text:#202a36;--muted:#687586;
+  --line:#e0e5eb;--accent:#3267c8;--accent-hover:#2553a7;--accent2:#e8effd;
+  --good:#23784b;--bad:#b33b35;--tile:#edf1f5;--wall:#475569;
+  --shadow:0 4px 14px rgba(22, 38, 59, 0.08);
+}
+html[data-theme=dark]{
+  color-scheme:dark;
+  --bg:#0f172a;--panel:#1e293b;--panel2:#0f172a;--text:#f8fafc;--muted:#94a3b8;
+  --line:#334155;--accent:#38bdf8;--accent-hover:#0284c7;--accent2:#1e3a8a;
+  --good:#4ade80;--bad:#f87171;--tile:#1e293b;--wall:#64748b;
+  --shadow:0 4px 14px rgba(0, 0, 0, 0.3);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 Inter,system-ui,-apple-system,sans-serif}
+button,textarea{font:inherit}button{cursor:pointer}
+
+/* Cover / Landing Page */
+.cover-screen{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:100vh;padding:30px 20px;text-align:center;
+  background:radial-gradient(circle at 50% 30%, var(--accent2) 0%, var(--bg) 70%);
+}
+.cover-card{
+  background:var(--panel);border:1px solid var(--line);border-radius:24px;
+  padding:40px;max-width:760px;width:100%;box-shadow:var(--shadow);
+  display:flex;flex-direction:column;align-items:center;gap:20px;
+  animation:fadeIn 0.6s ease-out;
+}
+.cover-hero-svg{width:160px;height:160px;filter:drop-shadow(0 10px 15px rgba(0,0,0,0.15));animation:float 3s ease-in-out infinite}
+.cover-title{font-size:36px;font-weight:800;letter-spacing:-1px;margin:0}
+.cover-subtitle{font-size:16px;color:var(--muted);max-width:520px;margin:0}
+.cover-features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;width:100%;margin:10px 0 20px}
+.feat-box{background:var(--panel2);border:1px solid var(--line);padding:15px;border-radius:12px;text-align:left}
+.feat-box h4{margin:0 0 4px 0;font-size:14px;color:var(--text)}
+.feat-box p{margin:0;font-size:12px;color:var(--muted)}
+.btn-start{
+  background:var(--accent);color:#fff;font-size:18px;font-weight:700;
+  padding:14px 40px;border:none;border-radius:12px;
+  box-shadow:0 4px 15px rgba(50,103,200,0.4);transition:all .2s ease;
+}
+.btn-start:hover{transform:translateY(-2px);background:var(--accent-hover)}
+
+/* Main App Screen */
+.app{max-width:1440px;margin:auto;padding:22px;display:none}
+header{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}
+.brand{display:flex;gap:12px;align-items:center}
+.logo-svg{width:44px;height:44px}
+h1{font-size:20px;letter-spacing:-.45px;margin:0}
+.subtitle{font-size:12px;color:var(--muted);margin-top:2px}
+.top-actions{display:flex;gap:8px;align-items:center}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:8px 12px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:all 0.15s ease}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:white}
+.btn.primary:hover{background:var(--accent-hover);color:white}
+.btn.small{padding:5px 9px;font-size:12px}
+
+.layout{display:grid;grid-template-columns:minmax(235px,.78fr) minmax(360px,1.15fr) minmax(280px,.92fr);gap:15px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.panel-head{padding:13px 15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.panel-head h2{font-size:14px;margin:0}
+.panel-body{padding:15px}
+.tag{border:1px solid var(--line);border-radius:6px;padding:3px 6px;color:var(--muted);font-size:10px;white-space:nowrap}
+.kicker{font-size:10px;letter-spacing:.1em;color:var(--muted);font-weight:750;text-transform:uppercase}
+.mission-title{font-size:18px;line-height:1.25;margin:6px 0}
+.muted{color:var(--muted)}
+.pills{display:flex;gap:5px;flex-wrap:wrap;margin:12px 0}
+.pill{border:1px solid var(--line);background:var(--panel2);border-radius:5px;padding:3px 7px;color:var(--muted);font-size:11px}
+.objective{padding:11px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;margin:13px 0}
+.objective strong{display:block;margin-bottom:4px}
+.objective ul{padding-left:18px;margin:0;color:var(--muted)}
+.level-list{display:grid;gap:6px;margin-top:9px}
+.level-btn{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;width:100%;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);padding:9px;transition:all .15s}
+.level-btn.active{border-color:var(--accent);background:var(--accent2)}
+.level-btn strong{font-size:12px}
+.level-btn small{display:block;color:var(--muted);font-size:11px}
+
+/* Board Game Grid */
+.board-wrap{padding:15px}
+.board-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.board-top h2{font-size:14px;margin:0}
+.stats{display:flex;gap:6px}
+.stat{border:1px solid var(--line);border-radius:7px;background:var(--panel2);padding:4px 8px;font-size:11px;color:var(--muted)}
+.stat b{color:var(--text)}
+.board{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;max-width:500px;margin:auto;background:var(--line);padding:5px;border-radius:10px}
+.cell{aspect-ratio:1;min-width:0;display:grid;place-items:center;border-radius:6px;background:var(--tile);position:relative;overflow:hidden;transition:background .2s}
+.cell.wall{background:var(--wall)}
+.cell-icon{width:80%;height:80%;display:flex;align-items:center;justify-content:center}
+
+/* Dynamic Robot Component */
+.robot-svg{
+  width:88%;height:88%;
+  transition:transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter:drop-shadow(0 3px 5px rgba(0,0,0,0.25));
+}
+.robot-svg.dir-N{transform:rotate(0deg)}
+.robot-svg.dir-E{transform:rotate(90deg)}
+.robot-svg.dir-S{transform:rotate(180deg)}
+.robot-svg.dir-W{transform:rotate(270deg)}
+
+/* Legend */
+.legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;color:var(--muted);font-size:11px;margin:12px 0}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend-icon{width:16px;height:16px;display:inline-block}
+
+.status{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 11px;color:var(--muted);font-size:12px;min-height:39px}
+.controls{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+
+.tabs{display:flex;gap:4px;background:var(--panel2);border-radius:8px;padding:4px}
+.tab{flex:1;border:0;border-radius:5px;padding:7px 4px;background:transparent;color:var(--muted);font-size:12px;font-weight:650}
+.tab.active{background:var(--panel);color:var(--text);box-shadow:var(--shadow)}
+
+.editor-head{display:flex;justify-content:space-between;align-items:center;margin:12px 0 7px}
+.editor-head strong{font-size:12px}
+.code-list{display:grid;gap:6px}
+.command-row{display:flex;gap:5px;align-items:center}
+.line-no{width:18px;color:var(--muted);font-size:11px}
+.command{flex:1;min-width:0;border:1px solid var(--line);border-radius:6px;padding:7px 8px;background:var(--panel2);font:12px ui-monospace,monospace;overflow-wrap:anywhere}
+
+textarea{width:100%;min-height:210px;resize:vertical;border:1px solid var(--line);border-radius:8px;padding:11px;background:var(--panel2);color:var(--text);font:13px/1.65 ui-monospace,monospace;outline:none}
+textarea:focus{border-color:var(--accent)}
+.hint{font-size:11px;color:var(--muted);margin-top:7px}
+.console{margin-top:11px;border-radius:8px;padding:10px 11px;background:#0f172a;color:#cbd5e1;white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.6 ui-monospace,monospace;min-height:67px}
+.success{color:#4ade80}.error{color:#f87171}
+
+.score-head{display:flex;justify-content:space-between;align-items:center}
+.score{font-size:29px;letter-spacing:-1px;font-weight:800}
+.stars{color:#f59e0b;font-size:20px}
+.progress{height:6px;background:var(--panel2);border-radius:9px;overflow:hidden;margin:8px 0 14px}
+.progress span{height:100%;display:block;background:var(--accent);border-radius:9px}
+.rubric{display:grid;gap:12px}
+.rubric-top{display:flex;justify-content:space-between;gap:8px;font-size:11px;margin-bottom:4px}
+.rubric-top span{color:var(--muted)}
+.feedback{padding:10px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;font-size:12px;color:var(--muted);margin-top:14px}
+.feedback strong{display:block;color:var(--text);margin-bottom:4px}
+.footer{text-align:center;font-size:11px;color:var(--muted);margin-top:20px}
+
+/* Success Modal Alert */
+.modal-overlay{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(15, 23, 42, 0.7);
+  backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;
+  z-index:999;padding:20px;
+}
+.modal-overlay.active{display:flex;animation:fadeIn 0.25s ease-out}
+.modal-card{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:20px;padding:30px;max-width:440px;width:100%;
+  text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.3);
+  display:flex;flex-direction:column;align-items:center;gap:15px;
+}
+.modal-icon{width:90px;height:90px;animation:float 3s ease-in-out infinite}
+.modal-title{font-size:24px;font-weight:800;margin:0;color:var(--text)}
+.modal-stars{font-size:32px;color:#f59e0b;margin:-5px 0}
+.modal-desc{font-size:14px;color:var(--muted);margin:0}
+.modal-actions{display:flex;gap:10px;width:100%;margin-top:10px}
+.modal-actions .btn{flex:1;justify-content:center;padding:12px;font-size:14px}
+
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes fadeIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+
+@media(max-width:1100px){.layout{grid-template-columns:minmax(230px,.8fr) minmax(350px,1.2fr)}.right-col{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:15px}}
+@media(max-width:720px){.app{padding:12px}.layout{grid-template-columns:1fr}.right-col{grid-column:auto;grid-template-columns:1fr}header{align-items:flex-start}.top-actions{flex-wrap:wrap;justify-content:flex-end}.board{gap:3px}.panel-body,.board-wrap{padding:12px}}
+</style>
+</head>
+<body>
+
+<!-- SVG ASSETS DEFINITION -->
+<svg style="display:none;">
+  <defs>
+    <!-- Vector Robot Graphic -->
+    <g id="svg-robot">
+      <ellipse cx="25" cy="45" rx="16" ry="4" fill="rgba(0,0,0,0.2)"/>
+      <rect x="8" y="36" width="8" height="10" rx="3" fill="#334155"/>
+      <rect x="34" y="36" width="8" height="10" rx="3" fill="#334155"/>
+      <rect x="12" y="20" width="26" height="22" rx="6" fill="url(#botBodyGrad)" stroke="#1e293b" stroke-width="1.5"/>
+      <rect x="16" y="24" width="18" height="10" rx="3" fill="#0f172a"/>
+      <circle cx="21" cy="29" r="1.5" fill="#38bdf8"/>
+      <circle cx="25" cy="29" r="1.5" fill="#4ade80"/>
+      <circle cx="29" cy="29" r="1.5" fill="#f59e0b"/>
+      <rect x="22" y="16" width="6" height="5" fill="#64748b"/>
+      <rect x="14" y="6" width="22" height="12" rx="4" fill="url(#botBodyGrad)" stroke="#1e293b" stroke-width="1.5"/>
+      <rect x="17" y="8" width="16" height="6" rx="3" fill="#0284c7"/>
+      <circle cx="21" cy="11" r="2" fill="#38bdf8">
+        <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="29" cy="11" r="2" fill="#38bdf8">
+        <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <line x1="25" y1="6" x2="25" y2="2" stroke="#64748b" stroke-width="2"/>
+      <circle cx="25" cy="1.5" r="2" fill="#ef4444">
+        <animate attributeName="fill" values="#ef4444;#38bdf8;#ef4444" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <!-- Battery Graphic -->
+    <g id="svg-battery">
+      <rect x="14" y="10" width="22" height="30" rx="4" fill="#334155" stroke="#f59e0b" stroke-width="2"/>
+      <rect x="20" y="6" width="10" height="4" rx="1" fill="#f59e0b"/>
+      <rect x="17" y="14" width="16" height="22" rx="2" fill="#fef08a"/>
+      <path d="M26 16L20 26H25L24 34L30 24H25L26 16Z" fill="#d97706"/>
+    </g>
+
+    <!-- Exit Door Graphic -->
+    <g id="svg-door">
+      <rect x="10" y="6" width="30" height="38" rx="4" fill="#166534" stroke="#4ade80" stroke-width="2"/>
+      <rect x="14" y="10" width="22" height="34" rx="2" fill="#22c55e"/>
+      <circle cx="31" cy="27" r="2.5" fill="#fef08a"/>
+      <path d="M25 12 L33 20 L25 28" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+    </g>
+
+    <!-- Wall Graphic -->
+    <g id="svg-wall">
+      <rect x="4" y="4" width="42" height="42" rx="6" fill="#475569" stroke="#334155" stroke-width="2"/>
+      <line x1="4" y1="18" x2="46" y2="18" stroke="#334155" stroke-width="2"/>
+      <line x1="4" y1="32" x2="46" y2="32" stroke="#334155" stroke-width="2"/>
+      <line x1="25" y1="4" x2="25" y2="18" stroke="#334155" stroke-width="2"/>
+      <line x1="15" y1="18" x2="15" y2="32" stroke="#334155" stroke-width="2"/>
+      <line x1="35" y1="18" x2="35" y2="32" stroke="#334155" stroke-width="2"/>
+      <line x1="25" y1="32" x2="25" y2="46" stroke="#334155" stroke-width="2"/>
+    </g>
+
+    <linearGradient id="botBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#475569"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- LANDING / COVER SCREEN -->
+<div class="cover-screen" id="coverScreen">
+  <div class="cover-card">
+    <svg class="cover-hero-svg" viewBox="0 0 50 50"><use href="#svg-robot"/></svg>
+    <div>
+      <h1 class="cover-title">Robot Rescue <span style="color:var(--accent)">Python Lab</span></h1>
+      <p class="cover-subtitle">Kuasai logika pemrograman dan problem solving melalui petualangan menyelamatkan robot!</p>
+    </div>
+    
+    <div class="cover-features">
+      <div class="feat-box">
+        <h4>🧩 Visual / Kode</h4>
+        <p>Gunakan blok instruksi puzzle atau tulis langsung sintaks Python.</p>
+      </div>
+      <div class="feat-box">
+        <h4>🎵 Audio Interactive</h4>
+        <p>Efek suara synthesizer & latar musik memandu petualanganmu.</p>
+      </div>
+      <div class="feat-box">
+        <h4>📊 Evaluasi Otomatis</h4>
+        <p>Uji ketepatan, efisiensi langkah, dan analisa logika solusi.</p>
+      </div>
+    </div>
+
+    <button class="btn-start" id="startBtn">Mulai Petualangan ▶</button>
+  </div>
+</div>
+
+<!-- MAIN APPLICATION -->
+<div class="app" id="appScreen">
+<header>
+ <div class="brand">
+   <svg class="logo-svg" viewBox="0 0 50 50"><use href="#svg-robot"/></svg>
+   <div>
+     <h1>Robot Rescue <span class="muted" style="font-weight:500">/ Python Lab</span></h1>
+     <div class="subtitle">Belajar logika lewat misi, bukan sekadar hafalan sintaks.</div>
+   </div>
+ </div>
+ <div class="top-actions">
+   <button class="btn" id="homeBtn">🏠 Halaman Depan</button>
+   <button class="btn" id="soundBtn">🔊 Suara: ON</button>
+   <button class="btn" id="musicBtn">🎵 Musik: ON</button>
+   <button class="btn" id="themeBtn">☾ Dark Mode</button>
+   <button class="btn" id="resetProgress">Reset Progres</button>
+ </div>
+</header>
+
+<main class="layout">
+<section class="panel">
+ <div class="panel-head"><h2>Briefing Misi</h2><span class="tag" id="levelCount">MISI 01 / 06</span></div>
+ <div class="panel-body">
+   <div class="kicker" id="chapter">DASAR ALGORITMA</div>
+   <h2 class="mission-title" id="missionTitle">Jalur Pulang</h2>
+   <p class="muted" id="missionDesc">Arahkan robot ke pintu keluar.</p>
+   <div class="pills" id="pills"></div>
+   <div class="objective"><strong>Target Misi</strong><ul id="objectives"></ul></div>
+   <div class="kicker">Pilih Level</div>
+   <div class="level-list" id="levelList"></div>
+ </div>
+</section>
+
+<section class="panel">
+ <div class="panel-head"><h2>Simulator</h2><span class="tag" id="simStatus">SIAP</span></div>
+ <div class="board-wrap">
+   <div class="board-top">
+     <h2>Area Penyelamatan</h2>
+     <div class="stats">
+       <div class="stat">Langkah <b id="steps">0</b></div>
+       <div class="stat">Baterai <b id="batteryState">0/0</b></div>
+     </div>
+   </div>
+   
+   <div class="board" id="board" aria-label="Peta permainan"></div>
+   
+   <div class="legend">
+     <span><div class="legend-icon"><svg viewBox="0 0 50 50"><use href="#svg-robot"/></svg></div> Robot</span>
+     <span><div class="legend-icon"><svg viewBox="0 0 50 50"><use href="#svg-battery"/></svg></div> Baterai</span>
+     <span><div class="legend-icon"><svg viewBox="0 0 50 50"><use href="#svg-door"/></svg></div> Pintu Keluar</span>
+     <span><div class="legend-icon"><svg viewBox="0 0 50 50"><use href="#svg-wall"/></svg></div> Tembok</span>
+   </div>
+
+   <div class="status" id="missionStatus">Susun instruksi, lalu tekan Jalankan.</div>
+   <div class="controls">
+     <button class="btn primary" id="runBtn">▶ Jalankan</button>
+     <button class="btn" id="stepBtn">▷ Satu Langkah</button>
+     <button class="btn" id="restartBtn">↻ Ulangi Misi</button>
+   </div>
+ </div>
+</section>
+
+<div class="right-col">
+<section class="panel">
+ <div class="panel-head"><h2>Editor Kode</h2><span class="tag">Python Sederhana</span></div>
+ <div class="panel-body">
+  <div class="tabs">
+    <button class="tab active" data-mode="puzzle">Puzzle</button>
+    <button class="tab" data-mode="python">Python</button>
+  </div>
+  <div class="editor-head">
+    <strong id="editorLabel">Urutan Instruksi</strong>
+    <button class="btn small" id="hintBtn">Petunjuk</button>
+  </div>
+  <div id="puzzleEditor"></div>
+  <textarea id="codeEditor" spellcheck="false" aria-label="Editor kode Python" hidden></textarea>
+  <div class="hint" id="editorHint">Pilih instruksi lalu susun urutannya.</div>
+  <div class="controls">
+    <button class="btn" id="clearBtn">Kosongkan</button>
+    <button class="btn" id="sampleBtn">Contoh Kode</button>
+  </div>
+  <div class="console" id="console">Console siap. Belum ada program yang dijalankan.</div>
+ </div>
+</section>
+
+<section class="panel">
+ <div class="panel-head"><h2>Evaluasi Problem Solving</h2><span class="tag" id="gradeTag">BELUM DINILAI</span></div>
+ <div class="panel-body">
+  <div class="score-head">
+    <div>
+      <div class="kicker">Skor Misi</div>
+      <div class="score"><span id="score">—</span><span style="font-size:13px;color:var(--muted);letter-spacing:0"> / 100</span></div>
+    </div>
+    <div class="stars" id="stars">☆☆☆</div>
+  </div>
+  <div class="progress"><span id="scoreBar" style="width:0%"></span></div>
+  <div class="rubric" id="rubric"></div>
+  <div class="feedback" id="feedback">
+    <strong>Catatan Pembelajaran</strong>Jalankan program untuk melihat evaluasi dan saran perbaikan.
+  </div>
+ </div>
+</section>
+</div>
+</main>
+
+<div class="footer">Robot Rescue • Prototipe Pembelajaran Python • Progres tersimpan di browser ini</div>
+</div>
+
+<!-- SUCCESS ALERT MODAL -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal-card">
+    <svg class="modal-icon" viewBox="0 0 50 50"><use href="#svg-robot"/></svg>
+    <h2 class="modal-title">🎉 Misi Berhasil!</h2>
+    <div class="modal-stars" id="modalStars">★★★</div>
+    <p class="modal-desc" id="modalDesc">Luar biasa! Robot berhasil mencapai pintu keluar dengan selamat.</p>
+    <div class="modal-actions">
+      <button class="btn" id="modalRetryBtn">↻ Mainkan Lagi</button>
+      <button class="btn primary" id="nextMissionBtn">Misi Selanjutnya ▶</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// WEB AUDIO SYNTHESIZER (SOUND ENGINE)
+class SoundEngine {
+  constructor() {
+    this.ctx = null;
+    this.soundOn = true;
+    this.musicOn = false;
+    this.bgmTimer = null;
+    this.noteIndex = 0;
+  }
+  init() {
+    if (!this.ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      this.ctx = new AudioCtx();
+    }
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+  }
+  playTone(freq, duration, type='sine', gainVal=0.08) {
+    if (!this.soundOn) return;
+    this.init();
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + duration);
+    } catch(e) {}
+  }
+  sfxMove() { this.playTone(320, 0.08, 'triangle', 0.08); }
+  sfxTurn() { this.playTone(480, 0.06, 'sine', 0.06); }
+  sfxBattery() {
+    this.playTone(523, 0.1, 'sine', 0.12);
+    setTimeout(() => this.playTone(659, 0.1, 'sine', 0.12), 80);
+    setTimeout(() => this.playTone(783, 0.15, 'sine', 0.12), 160);
+  }
+  sfxBump() {
+    this.playTone(120, 0.2, 'sawtooth', 0.15);
+  }
+  sfxSuccess() {
+    const notes = [440, 554, 659, 880];
+    notes.forEach((f, i) => {
+      setTimeout(() => this.playTone(f, 0.18, 'sine', 0.12), i * 100);
+    });
+  }
+  toggleMusic() {
+    this.musicOn = !this.musicOn;
+    if (this.musicOn) {
+      this.startBGM();
+    } else {
+      this.stopBGM();
+    }
+    return this.musicOn;
+  }
+  startBGM() {
+    this.init();
+    if (this.bgmTimer) clearInterval(this.bgmTimer);
+    const melody = [
+      261.63, 329.63, 392.00, 523.25, 
+      349.23, 440.00, 523.25, 659.25,
+      293.66, 349.23, 440.00, 587.33,
+      196.00, 246.94, 293.66, 392.00
+    ];
+    this.bgmTimer = setInterval(() => {
+      if (!this.musicOn) return;
+      const freq = melody[this.noteIndex % melody.length];
+      this.playTone(freq, 0.35, 'sine', 0.025);
+      this.noteIndex++;
+    }, 350);
+  }
+  stopBGM() {
+    if (this.bgmTimer) clearInterval(this.bgmTimer);
+  }
+}
+
+const audio = new SoundEngine();
+
+// GAME DATA
+const levels = [
+  {name:"Jalur Pulang",chapter:"DASAR ALGORITMA",desc:"Robot tersesat di fasilitas. Bantu robot mencapai pintu keluar tanpa menabrak tembok.",tags:["Sequencing","Gerakan dasar"],goals:["Capai petak hijau.","Hindari semua tembok."],start:[0,2],dir:"E",battery:null,goal:[3,2],walls:[[2,1],[2,3],[5,0],[5,4]],hint:"Robot menghadap ke kanan. Coba gerakkan robot tiga petak ke kanan.",starter:["move()","move()","move()"],concept:"Urutan instruksi"},
+  {name:"Isi Energi",chapter:"VARIABEL & AKSI",desc:"Ambil baterai sebelum menuju pintu keluar.",tags:["Urutan aksi","State"],goals:["Ambil baterai kuning.","Setelah itu capai pintu keluar."],start:[0,4],dir:"N",battery:[0,2],goal:[3,0],walls:[[1,3],[1,1],[3,2],[5,4]],hint:"Robot menghadap ke atas. Ambil baterai di jalur vertikal, lalu rencanakan jalan menuju pintu.",starter:["move()","move()","collect_battery()","turn_right()","move()","move()","move()","turn_left()","move()","move()"],concept:"Perencanaan"},
+  {name:"Lorong Berulang",chapter:"PENGULANGAN",desc:"Selesaikan lorong panjang, lalu sederhanakan instruksi berulang dengan for.",tags:["for loop","Efisiensi"],goals:["Capai pintu keluar.","Coba gunakan for untuk gerakan berulang."],start:[1,3],dir:"E",battery:null,goal:[5,3],walls:[[3,2],[3,4],[0,1],[6,1]],hint:"Robot perlu bergerak ke kanan empat kali. Dalam mode Python, coba for i in range(4): lalu move() dengan indentasi.",starter:["move()","move()","move()","move()"],concept:"Pengulangan"},
+  {name:"Jalur Aman",chapter:"PENGAMBILAN KEPUTUSAN",desc:"Lorong langsung tertutup tembok. Temukan jalur alternatif.",tags:["Strategi","Debugging logika"],goals:["Jangan menabrak tembok.","Temukan jalan memutar menuju pintu."],start:[1,2],dir:"E",battery:null,goal:[5,2],walls:[[3,2],[3,1],[3,3]],hint:"Jangan maju ke kanan di baris tengah. Cari jalan di sekitar ujung tembok.",starter:["turn_left()","move()","turn_right()","move()","move()","move()","move()","turn_right()","move()"],concept:"Strategi jalur"},
+  {name:"Perbaiki Program",chapter:"DEBUGGING",desc:"Program teknisi gagal. Jalankan satu langkah demi satu langkah untuk menemukan kesalahan.",tags:["Debugging","Uji coba"],goals:["Amati gerak robot.","Perbaiki urutan instruksi sampai tujuan tercapai."],start:[0,1],dir:"E",battery:null,goal:[3,1],walls:[[2,1],[2,2],[5,3]],hint:"Kode awal sengaja belum benar. Perhatikan pesan tabrakan, lalu ubah urutan belokan.",starter:["move()","move()","move()"],concept:"Analisis kesalahan"},
+  {name:"Misi Mandiri",chapter:"TANTANGAN AKHIR",desc:"Rencanakan sendiri jalur robot, ambil baterai, dan capai pintu.",tags:["Problem solving","Adaptasi"],goals:["Ambil baterai.","Capai pintu keluar tanpa menabrak tembok."],start:[0,4],dir:"N",battery:[0,2],goal:[4,0],walls:[[1,3],[2,3],[3,3],[3,1],[1,1]],hint:"Rencanakan perjalanan ke atas menuju baterai, lalu menuju baris atas dan bergerak ke kanan.",starter:["move()","move()","collect_battery()","move()"],concept:"Solusi mandiri"}
+];
+
+const rubric = [["Memahami masalah",15],["Perencanaan algoritma",20],["Logika program",25],["Pengujian & debugging",20],["Efisiensi solusi",10],["Adaptasi solusi",10]];
+
+const $ = id => document.getElementById(id);
+let levelIndex = 0, mode = "puzzle", commands = [], robot = null, steps = 0, batteryCollected = false, attempts = 0, usedHint = false, usedStep = false, stepState = null, stepCommands = [], stepPos = 0;
+
+function level() { return levels[levelIndex]; }
+
+function theme(t) {
+  document.documentElement.dataset.theme = t;
+  localStorage.setItem("rr-theme", t);
+  $("themeBtn").textContent = t === "dark" ? '☀ Light Mode' : '☾ Dark Mode';
+}
+
+function showScreen(screen) {
+  if (screen === 'cover') {
+    $("coverScreen").style.display = 'flex';
+    $("appScreen").style.display = 'none';
+  } else {
+    $("coverScreen").style.display = 'none';
+    $("appScreen").style.display = 'block';
+  }
+}
+
+function renderLevels() {
+  $("levelList").innerHTML = "";
+  levels.forEach((l, i) => {
+    let b = document.createElement("button");
+    b.className = "level-btn" + (i === levelIndex ? " active" : "");
+    b.innerHTML = `<span><strong>${String(i+1).padStart(2,"0")} · ${l.name}</strong><small>${l.concept}</small></span><span class="tag">${localStorage.getItem("rr-done-"+i) === "1" ? "✓ Selesai" : "Misi"}</span>`;
+    b.onclick = () => loadLevel(i);
+    $("levelList").appendChild(b);
+  });
+}
+
+function loadLevel(i) {
+  levelIndex = i;
+  let l = level();
+  commands = [...l.starter];
+  robot = { x: l.start[0], y: l.start[1], dir: l.dir };
+  steps = 0;
+  batteryCollected = !l.battery;
+  attempts = 0; usedHint = false; usedStep = false; stepState = null; stepCommands = []; stepPos = 0;
+
+  $("chapter").textContent = l.chapter;
+  $("missionTitle").textContent = l.name;
+  $("missionDesc").textContent = l.desc;
+  $("levelCount").textContent = `MISI ${String(i+1).padStart(2,"0")} / ${levels.length}`;
+  $("pills").innerHTML = l.tags.map(x => `<span class="pill">${x}</span>`).join("");
+  $("objectives").innerHTML = l.goals.map(x => `<li>${x}</li>`).join("");
+  $("missionStatus").textContent = "Susun instruksi, lalu tekan Jalankan.";
+  $("simStatus").textContent = "SIAP";
+  $("console").textContent = "Console siap.\nBelum ada program yang dijalankan.";
+  $("score").textContent = "—";
+  $("scoreBar").style.width = "0%";
+  $("stars").textContent = "☆☆☆";
+  $("gradeTag").textContent = "BELUM DINILAI";
+  $("feedback").innerHTML = "<strong>Catatan Pembelajaran</strong>Jalankan program untuk melihat evaluasi dan saran perbaikan.";
+
+  closeModal();
+  renderLevels();
+  renderBoard();
+  renderEditor();
+  renderRubric(null);
+}
+
+function renderBoard() {
+  let l = level();
+  $("board").innerHTML = "";
+  for (let y = 0; y < 5; y++) {
+    for (let x = 0; x < 7; x++) {
+      let c = document.createElement("div");
+      c.className = "cell";
+      let wall = l.walls.some(p => p[0] === x && p[1] === y);
+      let isRobot = robot.x === x && robot.y === y;
+      let battery = l.battery && l.battery[0] === x && l.battery[1] === y && !batteryCollected;
+      let goal = l.goal[0] === x && l.goal[1] === y;
+
+      if (wall) {
+        c.classList.add("wall");
+        c.innerHTML = `<div class="cell-icon"><svg viewBox="0 0 50 50"><use href="#svg-wall"/></svg></div>`;
+      } else if (isRobot) {
+        c.innerHTML = `<svg class="robot-svg dir-${robot.dir}" viewBox="0 0 50 50"><use href="#svg-robot"/></svg>`;
+      } else if (battery) {
+        c.innerHTML = `<div class="cell-icon"><svg viewBox="0 0 50 50"><use href="#svg-battery"/></svg></div>`;
+      } else if (goal) {
+        c.innerHTML = `<div class="cell-icon"><svg viewBox="0 0 50 50"><use href="#svg-door"/></svg></div>`;
+      }
+      $("board").appendChild(c);
+    }
+  }
+  $("steps").textContent = steps;
+  $("batteryState").textContent = `${batteryCollected ? 1 : 0}/${l.battery ? 1 : 0}`;
+}
+
+function renderEditor() {
+  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.mode === mode));
+  $("puzzleEditor").hidden = mode !== "puzzle";
+  $("codeEditor").hidden = mode !== "python";
+
+  if (mode === "puzzle") {
+    $("editorLabel").textContent = "Urutan Instruksi";
+    $("editorHint").textContent = "Tambahkan instruksi, lalu gunakan ↑ dan ↓ untuk menyusun urutan.";
+    $("puzzleEditor").innerHTML = "";
+
+    let pool = document.createElement("div");
+    pool.style.cssText = "display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px";
+    ["move()", "turn_left()", "turn_right()", "collect_battery()"].forEach(cmd => {
+      let b = document.createElement("button");
+      b.className = "btn small";
+      b.textContent = "+ " + cmd;
+      b.onclick = () => { commands.push(cmd); renderEditor(); };
+      pool.appendChild(b);
+    });
+    $("puzzleEditor").appendChild(pool);
+
+    let list = document.createElement("div");
+    list.className = "code-list";
+    commands.forEach((cmd, i) => {
+      let row = document.createElement("div");
+      row.className = "command-row";
+      let no = document.createElement("span");
+      no.className = "line-no";
+      no.textContent = i + 1;
+      let code = document.createElement("div");
+      code.className = "command";
+      code.textContent = cmd;
+      row.append(no, code);
+
+      [
+        ["↑", () => { if (i) { [commands[i-1], commands[i]] = [commands[i], commands[i-1]]; renderEditor(); } }],
+        ["↓", () => { if (i < commands.length - 1) { [commands[i+1], commands[i]] = [commands[i], commands[i+1]]; renderEditor(); } }],
+        ["×", () => { commands.splice(i, 1); renderEditor(); }]
+      ].forEach(([txt, fn]) => {
+        let b = document.createElement("button");
+        b.className = "btn small";
+        b.textContent = txt;
+        b.onclick = fn;
+        row.appendChild(b);
+      });
+      list.appendChild(row);
+    });
+    if (!commands.length) list.textContent = "Belum ada instruksi.";
+    $("puzzleEditor").appendChild(list);
+  } else {
+    $("editorLabel").textContent = "Tulis Kode Python";
+    $("editorHint").textContent = "Fungsi tersedia: move(), turn_left(), turn_right(), collect_battery(). Pengulangan for i in range(n): didukung.";
+    if (!$("codeEditor").dataset.edited) $("codeEditor").value = commands.join("\n");
+  }
+}
+
+function parseCommand(s) {
+  let m = s.match(/^(move|turn_left|turn_right|collect_battery)\s*\(\s*\)$/);
+  if (!m) throw Error(`Instruksi tidak dikenali: "${s}". Periksa nama fungsi dan tanda kurung.`);
+  return m[1];
+}
+
+function parseProgram() {
+  if (mode === "puzzle") return commands.map(parseCommand);
+  let lines = $("codeEditor").value.split(/\r?\n/), out = [], loop = null;
+  for (let raw of lines) {
+    let line = raw.trim();
+    if (!line || line.startsWith("#")) continue;
+    let m = line.match(/^for\s+\w+\s+in\s+range\((\d+)\):$/);
+    if (m) {
+      if (loop) throw Error("Loop bertingkat belum didukung.");
+      loop = { n: Math.min(50, +m[1]), body: [] };
+      continue;
+    }
+    if (loop && /^\s+/.test(raw)) {
+      loop.body.push(parseCommand(line));
+      continue;
+    }
+    if (loop) {
+      if (!loop.body.length) throw Error("Isi perulangan masih kosong.");
+      for (let i = 0; i < loop.n; i++) out.push(...loop.body);
+      loop = null;
+    }
+    out.push(parseCommand(line));
+  }
+  if (loop) {
+    if (!loop.body.length) throw Error("Isi perulangan masih kosong.");
+    for (let i = 0; i < loop.n; i++) out.push(...loop.body);
+  }
+  if (out.length > 150) throw Error("Program terlalu panjang (maksimal 150 aksi).");
+  return out;
+}
+
+function turn(d, t) {
+  let a = ["N", "E", "S", "W"];
+  return a[(a.indexOf(d) + (t === "right" ? 1 : 3)) % 4];
+}
+
+function action(s, cmd, l) {
+  if (cmd === "turn_left" || cmd === "turn_right") {
+    s.dir = turn(s.dir, cmd === "turn_right" ? "right" : "left");
+    audio.sfxTurn();
+    return null;
+  }
+  if (cmd === "collect_battery") {
+    if (!l.battery || s.x !== l.battery[0] || s.y !== l.battery[1]) return "Robot belum berada di petak baterai.";
+    s.battery = true;
+    audio.sfxBattery();
+    return null;
+  }
+  let d = { N:[0,-1], E:[1,0], S:[0,1], W:[-1,0] }[s.dir], x = s.x + d[0], y = s.y + d[1];
+  if (x < 0 || x >= 7 || y < 0 || y >= 5) {
+    audio.sfxBump();
+    return "Robot mencoba keluar dari peta.";
+  }
+  if (l.walls.some(p => p[0] === x && p[1] === y)) {
+    audio.sfxBump();
+    return `Robot menabrak tembok di petak (${x+1}, ${y+1}).`;
+  }
+  s.x = x; s.y = y;
+  audio.sfxMove();
+  return null;
+}
+
+function won(s, l) { return s.x === l.goal[0] && s.y === l.goal[1] && s.battery; }
+function escape(s) { return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c])); }
+
+function runProgram(single = false) {
+  audio.init();
+  let parsed;
+  try {
+    parsed = parseProgram();
+  } catch(e) {
+    $("console").innerHTML = `<span class="error">Kesalahan Sintaks</span>\n${escape(e.message)}`;
+    $("missionStatus").textContent = "Program belum bisa dijalankan. Periksa sintaks.";
+    return;
+  }
+  if (!parsed.length) {
+    $("console").textContent = "Program kosong. Tambahkan instruksi.";
+    return;
+  }
+
+  attempts++;
+
+  if (single) {
+    if (!stepState) {
+      stepState = { x: level().start[0], y: level().start[1], dir: level().dir, battery: !level().battery };
+      stepCommands = parsed;
+      stepPos = 0; steps = 0;
+    }
+    if (stepPos >= stepCommands.length) {
+      $("missionStatus").textContent = "Semua instruksi sudah dijalankan.";
+      return;
+    }
+    let cmd = stepCommands[stepPos++], err = action(stepState, cmd, level());
+    steps++; usedStep = true;
+    robot = { ...stepState }; batteryCollected = stepState.battery;
+    renderBoard();
+
+    if (err) {
+      $("console").innerHTML = `<span class="error">${escape(err)}</span>\nAksi ke-${stepPos}: ${cmd}()`;
+      $("missionStatus").textContent = err;
+      $("simStatus").textContent = "ADA KENDALA";
+      stepState = null;
+      return;
+    }
+    if (won(stepState, level())) {
+      finish(true, null, stepCommands, stepState);
+      return;
+    }
+    $("console").textContent = `Langkah ${stepPos}/${stepCommands.length}\nAksi: ${cmd}()\nPosisi: (${robot.x+1}, ${robot.y+1}) · Arah ${robot.dir}`;
+    $("missionStatus").textContent = "Satu langkah selesai. Lanjutkan atau periksa posisi robot.";
+    return;
+  }
+
+  // Full Animated Run
+  let l = level(), s = { x: l.start[0], y: l.start[1], dir: l.dir, battery: !l.battery };
+  let log = [], err = null, success = false, n = 0;
+
+  stepPos = 0;
+  const interval = setInterval(() => {
+    if (stepPos >= parsed.length) {
+      clearInterval(interval);
+      finish(success, err, parsed, s, log);
+      return;
+    }
+
+    let cmd = parsed[stepPos];
+    err = action(s, cmd, l);
+    n++;
+    stepPos++;
+    steps = n;
+    robot = { x: s.x, y: s.y, dir: s.dir };
+    batteryCollected = s.battery;
+    renderBoard();
+
+    if (err) {
+      log.push(`${n}. ${cmd}(): ${err}`);
+      clearInterval(interval);
+      finish(false, err, parsed, s, log);
+      return;
+    }
+    log.push(`${n}. ${cmd}() → (${s.x+1}, ${s.y+1}), Arah ${s.dir}`);
+
+    if (won(s, l)) {
+      success = true;
+      clearInterval(interval);
+      finish(true, null, parsed, s, log);
+      return;
+    }
+  }, 250);
+}
+
+function showModal(starsTxt, scoreVal) {
+  $("modalStars").textContent = starsTxt;
+  $("modalDesc").textContent = `Selamat! Misi ${levelIndex + 1} berhasil diselesaikan dengan skor ${scoreVal}/100.`;
+  if (levelIndex >= levels.length - 1) {
+    $("nextMissionBtn").textContent = "🎉 Semua Misi Selesai!";
+  } else {
+    $("nextMissionBtn").textContent = "Misi Selanjutnya ▶";
+  }
+  $("successModal").classList.add("active");
+}
+
+function closeModal() {
+  $("successModal").classList.remove("active");
+}
+
+function finish(success, err, parsed, s, log = []) {
+  if (success) audio.sfxSuccess();
+  $("simStatus").textContent = success ? "MISI SELESAI" : err ? "ADA KENDALA" : "BELUM SELESAI";
+  $("missionStatus").textContent = success ? "Berhasil! Robot mencapai tujuan." : err || "Robot belum mencapai tujuan. Periksa urutan dan arah gerakan.";
+  let lines = log.length ? log.slice(-7).map(escape).join("\n") : `Posisi akhir: (${s.x+1}, ${s.y+1})`;
+
+  if (success) {
+    $("console").innerHTML = `<span class="success">✓ Misi berhasil diselesaikan.</span>\n${lines}`;
+    localStorage.setItem("rr-done-" + levelIndex, "1");
+  } else {
+    $("console").innerHTML = `<span class="error">${err ? "Misi terhenti." : "Misi belum selesai."}</span>\n${lines}`;
+  }
+
+  let sc = success ? [15, 20, 25, Math.max(10, 20 - (attempts - 1) * 3 - (usedHint ? 3 : 0)), Math.max(4, 10 - Math.max(0, parsed.length - 5)), 8] : [10, 12, Math.max(4, Math.floor(parsed.length / 2)), Math.min(12, attempts * 3 + (usedStep ? 2 : 0)), 4, 2];
+  let total = sc.reduce((a, b) => a + b, 0);
+
+  const starsTxt = "★".repeat(total >= 90 ? 3 : total >= 70 ? 2 : success ? 1 : 0) + "☆".repeat(total >= 90 ? 0 : total >= 70 ? 1 : success ? 2 : 3);
+
+  $("score").textContent = total;
+  $("scoreBar").style.width = total + "%";
+  $("stars").textContent = starsTxt;
+  $("gradeTag").textContent = success ? "MISI SELESAI" : "PERLU PERBAIKAN";
+
+  renderRubric(sc);
+  $("feedback").innerHTML = `<strong>${success ? "Bagus, misi terselesaikan!" : "Langkah Berikutnya"}</strong>${success ? "Solusi berhasil. Coba level berikutnya dan perhatikan efisiensi instruksi." : err ? "Periksa instruksi yang menyebabkan kendala, lalu jalankan kembali." : "Robot belum mencapai tujuan. Gunakan satu langkah untuk memeriksa posisi dan arah."}${usedHint ? " Petunjuk telah digunakan; coba rencanakan misi berikutnya secara mandiri." : ""}`;
+  renderLevels();
+  stepState = null;
+
+  if (success) {
+    setTimeout(() => showModal(starsTxt, total), 300);
+  }
+}
+
+function renderRubric(scores) {
+  $("rubric").innerHTML = "";
+  rubric.forEach((r, i) => {
+    let v = scores ? scores[i] : 0, el = document.createElement("div");
+    el.innerHTML = `<div class="rubric-top"><span>${r[0]}</span><b>${scores ? v : "—"} / ${r[1]}</b></div><div class="progress"><span style="width:${scores ? v / r[1] * 100 : 0}%"></span></div>`;
+    $("rubric").appendChild(el);
+  });
+}
+
+// EVENT LISTENERS & INITIALIZATION
+document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
+  if (mode === "puzzle") {
+    $("codeEditor").value = commands.join("\n");
+    $("codeEditor").dataset.edited = "1";
+  } else {
+    try { commands = parseProgram(); } catch(e) {}
+  }
+  mode = t.dataset.mode;
+  renderEditor();
+});
+
+const enableAudioOnFirstClick = () => {
+  audio.init();
+  if (!audio.musicOn) {
+    audio.musicOn = true;
+    audio.startBGM();
+    $("musicBtn").textContent = "🎵 Musik: ON";
+  }
+  document.removeEventListener('click', enableAudioOnFirstClick);
+};
+document.addEventListener('click', enableAudioOnFirstClick);
+
+$("startBtn").onclick = () => { 
+  audio.init();
+  if (!audio.musicOn) {
+    audio.musicOn = true;
+    audio.startBGM();
+    $("musicBtn").textContent = "🎵 Musik: ON";
+  }
+  showScreen('app'); 
+};
+
+$("homeBtn").onclick = () => showScreen('cover');
+
+$("soundBtn").onclick = () => {
+  audio.soundOn = !audio.soundOn;
+  $("soundBtn").textContent = audio.soundOn ? "🔊 Suara: ON" : "🔇 Suara: OFF";
+};
+
+$("musicBtn").onclick = () => {
+  const isPlaying = audio.toggleMusic();
+  $("musicBtn").textContent = isPlaying ? "🎵 Musik: ON" : "🎵 Musik: OFF";
+};
+
+$("runBtn").onclick = () => { stepState = null; runProgram(false); };
+$("stepBtn").onclick = () => runProgram(true);
+$("restartBtn").onclick = () => loadLevel(levelIndex);
+
+$("hintBtn").onclick = () => {
+  usedHint = true;
+  $("missionStatus").textContent = level().hint;
+  $("console").textContent = "Petunjuk:\n" + level().hint;
+};
+
+$("clearBtn").onclick = () => {
+  if (mode === "puzzle") { commands = []; renderEditor(); }
+  else { $("codeEditor").value = ""; $("codeEditor").dataset.edited = "1"; }
+};
+
+$("sampleBtn").onclick = () => {
+  if (mode === "puzzle") { commands = [...level().starter]; renderEditor(); }
+  else { $("codeEditor").value = level().starter.join("\n"); $("codeEditor").dataset.edited = "1"; }
+};
+
+$("codeEditor").addEventListener("input", () => $("codeEditor").dataset.edited = "1");
+$("themeBtn").onclick = () => theme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+
+$("resetProgress").onclick = () => {
+  if (confirm("Reset semua progres level di browser ini?")) {
+    levels.forEach((_, i) => localStorage.removeItem("rr-done-" + i));
+    loadLevel(0);
+  }
+};
+
+$("modalRetryBtn").onclick = () => loadLevel(levelIndex);
+$("nextMissionBtn").onclick = () => {
+  if (levelIndex < levels.length - 1) {
+    loadLevel(levelIndex + 1);
+  } else {
+    loadLevel(0);
+  }
+};
+
+theme(localStorage.getItem("rr-theme") || "light");
+loadLevel(0);
+showScreen('cover');
+</script>
+</body>
+</html>
