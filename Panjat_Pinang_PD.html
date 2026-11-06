@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Panjat Pinang Informatika</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bl:#2563eb;--rd:#dc2626;--ink:#1e293b}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:"Segoe UI",system-ui,Arial,sans-serif;background:linear-gradient(#a5dcff,#fff4cc);color:var(--ink);display:flex;flex-direction:column}
+button{font:inherit;cursor:pointer}
+header{display:flex;align-items:center;gap:12px;padding:8px 16px;background:#7c2d12;color:#fff}
+header h1{margin:0;font-size:clamp(18px,2vw,30px)}
+#chips{display:flex;gap:6px;flex:1;flex-wrap:wrap}
+.chip{padding:4px 10px;border-radius:99px;background:#ffffff30;font-size:clamp(11px,1.1vw,16px)}
+.chip.on{background:#facc15;color:#422006;font-weight:700}
+.ib{border:0;border-radius:10px;padding:6px 12px;background:#ffffff30;color:#fff;font-size:22px}
+main{flex:1;min-height:0;display:grid;grid-template-columns:5fr 6fr;gap:12px;padding:12px}
+section{background:#ffffffe6;border-radius:16px;padding:12px;display:flex;flex-direction:column;min-height:0;box-shadow:0 4px 14px #0003}
+#bar{height:84px;border-top:8px solid #78350f;display:flex;justify-content:space-around}
+.prize{font-size:44px;transform-origin:50% 0;animation:sw 2.4s ease-in-out infinite alternate}
+.prize::before{content:"";display:block;width:2px;height:14px;background:#78350f;margin:0 auto}
+@keyframes sw{from{transform:rotate(-9deg)}to{transform:rotate(9deg)}}
+#stage{flex:1;position:relative;display:flex;padding-left:44px;min-height:240px;background:linear-gradient(#e0f4ff,#f8fcff)}
+.tick{position:absolute;left:0;right:0;border-top:2px dashed #94a3b8;height:0;font-weight:700;font-size:14px;color:#475569}
+.tick span{position:absolute;left:6px;top:-19px}
+.ground{position:absolute;left:0;right:0;bottom:0;height:16px;background:#65a30d}
+.col{flex:1;position:relative}
+.pole{position:absolute;left:50%;transform:translateX(-50%);width:30px;top:0;bottom:0;background:repeating-linear-gradient(#a16207 0 38px,#713f12 38px 42px);border-radius:6px}
+.climber{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(16px + (100% - 110px) * var(--l,0) / 5);transition:bottom 1.1s cubic-bezier(.3,1.4,.5,1);text-align:center;z-index:2}
+.tag{display:inline-block;padding:2px 10px;border-radius:99px;color:#fff;font-weight:700;font-size:clamp(13px,1.4vw,22px);white-space:nowrap}
+.em{font-size:clamp(40px,4.4vw,64px);line-height:1;animation:sway 1.6s ease-in-out infinite alternate}
+@keyframes sway{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+#ctrl{display:flex;margin-top:8px;padding-left:44px}
+#ctrl div{flex:1;text-align:center;font-weight:700;font-size:clamp(13px,1.3vw,20px)}
+.sm{border:0;border-radius:8px;padding:4px 14px;margin:2px;font-size:18px;background:#e2e8f0}
+.sm:hover{background:#cbd5e1}
+#quiz{gap:8px}
+#top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#time{font-size:clamp(34px,4vw,60px);font-weight:800;font-variant-numeric:tabular-nums;min-width:2.2ch;text-align:center;padding:0 14px;border-radius:12px;background:#0f172a;color:#4ade80}
+#time.lo{color:#f87171;animation:pl .5s infinite alternate}
+@keyframes pl{to{transform:scale(1.08)}}
+.b{border:0;border-radius:10px;padding:8px 14px;font-weight:700;color:#fff;background:#475569;font-size:clamp(13px,1.3vw,19px)}
+.b.g{background:#16a34a}.b.y{background:#d97706}.b.r{background:#dc2626}.b.p{background:#7c3aed}
+#qn{margin-left:auto;font-weight:700;color:#64748b;font-size:clamp(13px,1.3vw,19px)}
+#qc{flex:1;overflow:auto;min-height:0}
+#qt{font-size:clamp(22px,2.5vw,42px);font-weight:700;line-height:1.3;margin:4px 0 8px;white-space:pre-wrap}
+#code{background:#0f172a;color:#e2e8f0;font:clamp(16px,1.7vw,28px)/1.45 Consolas,"Courier New",monospace;padding:12px 16px;border-radius:12px;margin:0 0 10px;white-space:pre;overflow:auto;border-left:6px solid #38bdf8}
+#opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt{display:flex;gap:10px;align-items:center;text-align:left;border:3px solid #cbd5e1;background:#fff;border-radius:12px;padding:8px 12px;font-size:clamp(17px,1.9vw,30px);cursor:default;color:var(--ink)}
+.opt b{background:#e2e8f0;border-radius:8px;padding:0 10px}
+.opt.ok{border-color:#16a34a;background:#dcfce7}.opt.ok b{background:#16a34a;color:#fff}
+.opt.no{opacity:.5}
+#exp{display:none;margin-top:10px;background:#fef9c3;border-left:6px solid #eab308;border-radius:10px;padding:10px 14px;font-size:clamp(16px,1.6vw,26px)}
+#exp.show{display:block}
+.lkr{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.lkr span{font-weight:700;min-width:7ch;font-size:clamp(14px,1.4vw,22px)}
+.lk{border:3px solid #cbd5e1;background:#fff;border-radius:10px;width:clamp(40px,4vw,62px);height:clamp(36px,3.6vw,50px);font-weight:800;font-size:clamp(16px,1.6vw,24px)}
+.lkr.l .lk.on{background:var(--bl);color:#fff;border-color:var(--bl)}
+.lkr.r .lk.on{background:var(--rd);color:#fff;border-color:var(--rd)}
+.lk.ok{outline:4px solid #16a34a}.lk.bad{outline:4px solid #000;opacity:.6}
+#nav{display:flex;gap:8px;flex-wrap:wrap}
+#bsel{display:none;gap:6px;align-items:center;font-weight:700}
+select{font:inherit;padding:4px;border-radius:8px}
+.ov{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.ov.show{display:flex}
+.box{background:#fff;border-radius:20px;padding:26px 34px;max-width:620px;width:100%;text-align:center;font-size:clamp(16px,1.8vw,26px);animation:pop .4s}
+.box h2{margin:0 0 8px;font-size:clamp(24px,3vw,44px)}
+.box input{font:inherit;width:100%;margin:4px 0;padding:6px 10px;border:2px solid #cbd5e1;border-radius:8px}
+.box ol{text-align:left;display:inline-block}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+#cf{position:fixed;inset:0;pointer-events:none;z-index:60}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 20px;border-radius:99px;font-size:clamp(14px,1.5vw,22px);display:none;z-index:70;max-width:90vw;text-align:center}
+@media(max-width:900px){main{grid-template-columns:1fr;overflow:auto}#stage{min-height:340px}}
+</style></head><body>
+<header><h1>🎋 Panjat Pinang Informatika</h1><div id="chips"></div><button class="ib" id="gear" title="Pengaturan nama tim">⚙️</button></header>
+<main>
+<section id="arena">
+<div id="bar"><div class="prize">🚲</div><div class="prize" style="animation-delay:-.7s">🏆</div><div class="prize" style="animation-delay:-1.4s">📚</div><div class="prize" style="animation-delay:-.3s">🎁</div><div class="prize" style="animation-delay:-1.1s">🎧</div></div>
+<div id="stage"><div class="col"><div class="pole"></div><div class="climber" id="c0"><div class="tag" style="background:var(--bl)" id="t0"></div><div class="em">🧗</div></div></div><div class="col"><div class="pole"></div><div class="climber" id="c1"><div class="tag" style="background:var(--rd)" id="t1"></div><div class="em">🧗</div></div></div><div class="ground"></div></div>
+<div id="ctrl"><div><span id="cn0"></span> <span id="cl0"></span><br><button class="sm" onclick="mv(0,1)">▲ +1</button><button class="sm" onclick="mv(0,-1)">▼ −1</button></div><div><span id="cn1"></span> <span id="cl1"></span><br><button class="sm" onclick="mv(1,1)">▲ +1</button><button class="sm" onclick="mv(1,-1)">▼ −1</button></div></div>
+</section>
+<section id="quiz">
+<div id="top"><div id="time">30</div><button class="b g" onclick="tStart()">▶ Mulai</button><button class="b y" onclick="tPause()">⏸ Jeda</button><button class="b" onclick="tReset()">↺ Reset</button><div id="bsel"></div><div id="qn"></div></div>
+<div id="qc"><div id="qt"></div><pre id="code"></pre><div id="opts"></div><div id="exp"></div></div>
+<div class="lkr l" id="lk0"></div><div class="lkr r" id="lk1"></div>
+<div id="nav"><button class="b" onclick="go(-1)">◀ Sebelumnya</button><button class="b p" onclick="check()">✔ Periksa Jawaban</button><button class="b" onclick="go(1)">Berikutnya ▶</button><button class="b r" onclick="endRound()">🏁 Selesaikan Babak</button></div>
+</section></main>
+<div class="ov" id="mw"><div class="box" id="mb"></div></div>
+<div class="ov" id="ms"><div class="box"><h2>⚙️ Nama Tim</h2><div id="ni"></div><br><button class="b g" onclick="saveN()">Simpan</button> <button class="b" onclick="$('ms').classList.remove('show')">Tutup</button></div></div>
+<canvas id="cf"></canvas><div id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TT=["Babak 1 · Semifinal 1","Babak 2 · Semifinal 2","Babak 3 · Grand Final Juara 1","Babak 4 · Perebutan Juara 3","Babak 5 · Bonus Sudden Death"];
+// [soal, kode, [A,B,C,D], indeks kunci, pembahasan]
+const Q=[[
+["Manakah nama variabel yang VALID di Python?","",["2nama","nama_siswa","nama-siswa","class"],1,"Variabel tidak boleh diawali angka, tidak boleh memakai tanda minus (-), dan tidak boleh memakai kata kunci seperti class. nama_siswa valid (huruf dan garis bawah)."],
+["Apa output kode berikut?",`x = 7 / 2\nprint(type(x))`,["<class 'int'>","<class 'float'>","<class 'str'>","<class 'bool'>"],1,"Operator / selalu menghasilkan bilangan pecahan (float), yaitu 3.5."],
+["Jika pengguna mengetik Budi, apa output kode berikut?",`nama = input("Nama: ")\nprint(f"Halo {nama}!")`,["Halo nama!","Halo {nama}!","Halo Budi!","Error"],2,"f-string mengganti {nama} dengan isi variabelnya, sehingga tampil Halo Budi!"],
+["Berapa hasil dari print(17 // 5)?","",["3","3.4","2","3.0"],0,"Operator // adalah pembagian bulat: 17 dibagi 5 = 3 sisa 2, hasilnya 3."],
+["Apa output kode berikut?",`x = 8\nif x > 10:\n    print("A")\nelif x > 5:\n    print("B")\nelse:\n    print("C")`,["A","B","C","Tidak ada output"],1,"x > 10 salah, x > 5 benar sehingga blok elif dijalankan dan mencetak B."],
+["Dalam flowchart, simbol jajaran genjang digunakan untuk...","",["Proses perhitungan","Percabangan (keputusan)","Input / Output","Awal dan akhir program"],2,"Jajaran genjang = Input/Output. Belah ketupat = keputusan, persegi panjang = proses, oval = awal/akhir."]
+],[
+["Apa output kode berikut?",`Nilai = 80\nnilai = 90\nprint(Nilai)`,["80","90","170","Error"],0,"Python bersifat case-sensitive: Nilai dan nilai adalah dua variabel berbeda. Nilai bernilai 80."],
+["Apa hasil dari kode berikut?",`x = int("25") + 5\nprint(x)`,["255","30","Error","35"],1,"int(\"25\") mengubah teks menjadi bilangan bulat 25 (type casting), lalu ditambah 5 = 30."],
+["Apa output kode berikut?",`print("Python", "X", sep="-")`,["Python X","Python-X","Python-X-","PythonX"],1,"Parameter sep menentukan pemisah antar-argumen print(). Di sini pemisahnya tanda minus."],
+["Berapa hasil dari print(2 ** 3 + 10 % 4)?","",["8","10","14","11"],1,"2 ** 3 = 8 (pangkat), 10 % 4 = 2 (sisa bagi). 8 + 2 = 10."],
+["Apa yang terjadi jika baris di bawah if tidak diberi indentasi?","",["Berjalan normal","Muncul IndentationError","Muncul NameError","Mencetak None"],1,"Python memakai indentasi untuk menandai blok kode. Tanpa indentasi akan muncul IndentationError."],
+["Simbol belah ketupat pada flowchart menandakan...","",["Input data","Proses","Keputusan (Ya/Tidak)","Output data"],2,"Belah ketupat = decision, dipakai untuk percabangan dengan dua jalur: Ya dan Tidak."]
+],[
+["Manakah yang BUKAN nama variabel valid?","",["_total","total2","2total","total_2"],2,"Nama variabel tidak boleh diawali angka. _total, total2, dan total_2 valid."],
+["Apa output dari kode berikut?",`print(type(3 > 2))`,["<class 'int'>","<class 'str'>","<class 'bool'>","<class 'float'>"],2,"Operasi perbandingan menghasilkan nilai boolean (True/False), tipenya bool."],
+["Pengguna mengetik 5 lalu 3. Apa output kode berikut?",`a = input()\nb = input()\nprint(a + b)`,["8","53","5 3","Error"],1,"input() selalu menghasilkan string. Operator + pada string menyambung teks sehingga menjadi 53. Gunakan int() agar dijumlahkan."],
+["Berapa hasil dari print(7 / 2)?","",["3","3.5","4","3.0"],1,"Operator / adalah pembagian biasa dan menghasilkan float: 3.5."],
+["Apa output kode berikut?",`x = 9\nif x % 2 == 0:\n    print("Genap")\nelse:\n    print("Ganjil")`,["Genap","Ganjil","0","Error"],1,"9 % 2 = 1, bukan 0, sehingga syarat salah dan blok else mencetak Ganjil."],
+["Simbol oval (terminator) dalam flowchart dipakai untuk...","",["Mulai dan Selesai","Input data","Proses hitung","Keputusan"],0,"Oval/terminator menandai awal (Mulai) dan akhir (Selesai) sebuah alur program."]
+],[
+["Manakah yang TIDAK dapat dipakai sebagai nama variabel?","",["jumlah","nama_kelas","for","Total"],2,"for adalah kata kunci (keyword) Python untuk perulangan sehingga tidak boleh menjadi nama variabel."],
+["Apa output dari print(float(3))?","",["3","3.0","\"3\"","Error"],1,"float() mengubah bilangan bulat 3 menjadi bilangan pecahan 3.0."],
+["Apa output kode berikut?",`harga = 5000\nprint(f"Rp{harga * 2}")`,["Rp5000","Rp10000","Rp{harga * 2}","Error"],1,"Ekspresi di dalam kurung kurawal f-string dihitung dulu: 5000 * 2 = 10000."],
+["Apa output dari print(10 % 3, 10 // 3)?","",["3 1","1 3","1 3.33","0 3"],1,"10 % 3 = 1 (sisa bagi) dan 10 // 3 = 3 (hasil bagi bulat). Dicetak dengan spasi: 1 3."],
+["Apa output kode berikut?",`n = 0\nif n > 0:\n    print("Positif")\nelif n < 0:\n    print("Negatif")\nelse:\n    print("Nol")`,["Positif","Negatif","Nol","Tidak ada output"],2,"n tidak lebih dari 0 dan tidak kurang dari 0, sehingga else dijalankan: Nol."],
+["Pada flowchart, langkah luas = p * l digambar dengan simbol...","",["Jajaran genjang","Belah ketupat","Persegi panjang","Oval"],2,"Perhitungan atau penugasan nilai adalah proses, simbolnya persegi panjang."]
+],[
+["Penamaan variabel yang sesuai kebiasaan Python (snake_case) adalah...","",["JumlahSiswa","jumlah-siswa","jumlah_siswa","jumlah siswa"],2,"Konvensi Python (PEP 8) memakai huruf kecil dengan garis bawah: jumlah_siswa."],
+["Apa output dari print(int(7.9))?","",["8","7","7.9","Error"],1,"int() memotong bagian desimal tanpa pembulatan, sehingga 7.9 menjadi 7."],
+["Apa output kode berikut?",`print("Hi", end="!")\nprint("Ok")`,["Hi! (baris baru) Ok","Hi!Ok","Hi Ok","Hi!!Ok"],1,"Parameter end mengganti akhir baris bawaan. Karena end=\"!\", print berikutnya menyambung: Hi!Ok."],
+["Berapa hasil dari print(2 + 3 * 4 ** 2 // 8)?","",["8","10","14","6"],0,"Urutan: 4 ** 2 = 16, 3 * 16 = 48, 48 // 8 = 6, lalu 2 + 6 = 8."],
+["Apa output kode berikut?",`nilai = 75\nif nilai >= 90:\n    print("A")\nelif nilai >= 75:\n    print("B")\nelif nilai >= 60:\n    print("C")\nelse:\n    print("D")`,["A","B","C","D"],1,"75 >= 90 salah, 75 >= 75 benar sehingga mencetak B. Kondisi sesudahnya tidak diperiksa lagi."],
+["Berapa jalur keluar dari simbol keputusan (belah ketupat) pada flowchart dasar?","",["1","2","3","4"],1,"Simbol keputusan punya dua jalur keluar: Ya (True) dan Tidak (False)."]
+]];
+let names=["Tim A","Tim B","Tim C","Tim D"],rd=0,qi=0,lv=[0,0],lk=[null,null],done=false,fin=false,win=[],lose=[],bonus=[0,1],tt=30,timer=null;
+// ---- suara
+let AC;
+function tone(f,d,type="sine",v=.15,at=0){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+at;o.type=type;o.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d)}catch(e){}}
+const sUp=()=>[392,494,587,784].forEach((f,i)=>tone(f,.18,"triangle",.2,i*.09));
+const sDown=()=>[400,300,200].forEach((f,i)=>tone(f,.2,"sawtooth",.1,i*.1));
+const sTick=(l)=>tone(l?1200:900,.07,"square",l?.12:.06);
+const sFan=()=>[[523,0],[523,.15],[523,.3],[659,.45],[784,.7],[659,.95],[784,1.1],[1047,1.4]].forEach(([f,t])=>{tone(f,.35,"square",.12,t);tone(f/2,.35,"triangle",.1,t)});
+// ---- util
+const pair=()=>[[0,1],[2,3],[win[0],win[1]],[lose[0],lose[1]],bonus][rd];
+function toast(m){const t=$("toast");t.textContent=m;t.style.display="block";clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display="none",3200)}
+// ---- render
+function render(){
+ const p=pair(),q=Q[rd][qi];
+ $("chips").innerHTML=TT.map((t,i)=>`<span class="chip${i==rd?" on":""}">${esc(t)}</span>`).join("");
+ [0,1].forEach(s=>{$("t"+s).textContent=names[p[s]];$("cn"+s).textContent=names[p[s]];$("cl"+s).textContent="· Level "+lv[s];$("c"+s).style.setProperty("--l",lv[s]);
+  $("lk"+s).innerHTML=`<span>${esc(names[p[s]])}</span>`+"ABCD".split("").map((c,i)=>{let k="lk";if(lk[s]===i)k+=" on";if(done&&lk[s]===i)k+=i===q[3]?" ok":" bad";return `<button class="${k}" onclick="lock(${s},${i})">${c}</button>`}).join("")});
+ $("qn").textContent=`Soal ${qi+1} / 6`;$("qt").textContent=q[0];
+ $("code").style.display=q[1]?"block":"none";$("code").textContent=q[1];
+ $("opts").innerHTML=q[2].map((o,i)=>`<div class="opt${done?(i===q[3]?" ok":" no"):""}"><b>${"ABCD"[i]}</b><span>${esc(o)}</span></div>`).join("");
+ $("exp").className=done?"show":"";$("exp").innerHTML="💡 <b>Pembahasan:</b> "+esc(q[4]);
+ const bs=$("bsel");bs.style.display=rd==4?"flex":"none";
+ if(rd==4&&!bs.dataset.r){bs.dataset.r=1;const op=names.map((n,i)=>`<option value="${i}">${esc(n)}</option>`).join("");bs.innerHTML=`Bonus: <select id="b0">${op}</select> vs <select id="b1">${op}</select>`;$("b0").value=bonus[0];$("b1").value=bonus[1];$("b0").onchange=$("b1").onchange=()=>{bonus=[+$("b0").value,+$("b1").value];render()}}
+ if(rd!=4)delete bs.dataset.r;
+}
+function lock(s,i){if(done||fin)return;lk[s]=i;tone(700,.08,"triangle",.15);render()}
+function mv(s,d){if(fin)return;const n=Math.max(0,Math.min(5,lv[s]+d));if(n==lv[s])return;lv[s]=n;d>0?sUp():sDown();render();if(n>=5)setTimeout(chkWin,1300)}
+function check(){if(done||fin)return;done=true;tStop();const a=Q[rd][qi][3];let up=false;[0,1].forEach(s=>{if(lk[s]===a){lv[s]=Math.min(5,lv[s]+1);up=true}});
+ if(up)sUp();else toast("Belum ada tim yang menjawab benar");render();setTimeout(chkWin,1400)}
+function chkWin(){if(fin)return;const a=lv[0]>=5,b=lv[1]>=5;
+ if(a&&b){lv=[4,4];render();toast("Seri! Keduanya sampai puncak. Lanjut soal berikutnya sebagai sudden death.");return}
+ if(a||b)finish(a?0:1)}
+function endRound(){if(fin)return;if(lv[0]==lv[1]){toast("Posisi seri. Lanjutkan ke soal berikutnya atau atur manual dengan tombol wasit.");return}finish(lv[0]>lv[1]?0:1)}
+function go(d){const n=qi+d;if(n<0||n>5){toast(n<0?"Ini soal pertama":"Soal paket ini habis. Tekan Selesaikan Babak.");return}qi=n;lk=[null,null];done=false;tReset();render()}
+function finish(s){fin=true;tStop();const p=pair(),w=p[s],l=p[1-s];win[rd]=w;lose[rd]=l;sFan();confetti();
+ const msg=["lolos ke Grand Final!","lolos ke Grand Final!","menjadi JUARA 1! 🥇","meraih JUARA 3! 🥉","mendapat NILAI TAMBAHAN! ⭐"][rd];
+ modal(`<div style="font-size:70px">🏆</div><h2>Selamat, ${esc(names[w])}!</h2><p>${esc(names[w])} sampai di puncak dan ${msg}</p><button class="b g" onclick="next()">${rd<4?"Lanjut ke Babak "+(rd+2)+" ▶":"Lihat Hasil Akhir ▶"}</button>`)}
+function next(){$("mw").classList.remove("show");if(rd==4){showFinal();return}
+ rd++;qi=0;lv=[0,0];lk=[null,null];done=false;fin=false;tReset();if(rd==4)bonus=[win[2],lose[2]];render();toast(TT[rd])}
+function showFinal(){const r=[["🥇 Juara 1",win[2]],["🥈 Juara 2",lose[2]],["🥉 Juara 3",win[3]],["Juara 4",lose[3]]];
+ modal(`<h2>🎉 Hasil Akhir</h2><ol style="list-style:none;padding:0">${r.map(x=>`<li>${x[0]}: <b>${esc(names[x[1]])}</b></li>`).join("")}</ol><p>⭐ Nilai tambahan: <b>${esc(names[win[4]])}</b></p><button class="b" onclick="location.reload()">Main Lagi</button>`);confetti()}
+function modal(h){$("mb").innerHTML=h;$("mw").classList.add("show")}
+// ---- timer
+function show(){$("time").textContent=tt;$("time").className=tt<=10?"lo":""}
+function tStart(){if(timer||fin)return;if(tt<=0)tt=30;tone(600,.1);timer=setInterval(()=>{tt--;show();if(tt>0)sTick(tt<=10);if(tt<=0){tStop();[0,1,2].forEach(i=>tone(180,.3,"sawtooth",.15,i*.35));toast("⏰ Waktu habis!")}},1000)}
+function tStop(){clearInterval(timer);timer=null}
+function tPause(){tStop()}
+function tReset(){tStop();tt=30;show()}
+// ---- konfeti
+function confetti(){const c=$("cf"),x=c.getContext("2d");c.width=innerWidth;c.height=innerHeight;const col=["#f43f5e","#facc15","#22c55e","#3b82f6","#a855f7","#fb923c"];
+ const P=Array.from({length:260},()=>({x:innerWidth/2+(Math.random()-.5)*200,y:innerHeight*.35,vx:(Math.random()-.5)*20,vy:-Math.random()*18-4,w:6+Math.random()*8,h:4+Math.random()*8,r:Math.random()*6,vr:Math.random()*.4-.2,c:col[Math.random()*6|0]}));
+ (function f(){x.clearRect(0,0,c.width,c.height);let n=0;P.forEach(p=>{p.vy+=.45;p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.r+=p.vr;if(p.y<innerHeight+30){n++;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.w/2,-p.h/2,p.w,p.h);x.restore()}});if(n)requestAnimationFrame(f);else x.clearRect(0,0,c.width,c.height)})()}
+// ---- pengaturan
+$("gear").onclick=()=>{$("ni").innerHTML=names.map((n,i)=>`<input id="n${i}" value="${esc(n)}" maxlength="18" aria-label="Nama tim ${i+1}">`).join("");$("ms").classList.add("show")};
+function saveN(){names=names.map((n,i)=>$("n"+i).value.trim()||n);$("ms").classList.remove("show");delete $("bsel").dataset.r;render()}
+// ---- level
+(function(){const s=$("stage");for(let i=0;i<=5;i++){const d=document.createElement("div");d.className="tick";d.style.bottom=`calc(16px + (100% - 110px) * ${i} / 5)`;d.innerHTML=`<span>${i==5?"⭐ Level 5":"Level "+i}</span>`;s.appendChild(d)}})();
+render();
+</script></body></html>
